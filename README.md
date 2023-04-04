@@ -1,6 +1,6 @@
 # Visibility Algorithm
 
-[//]: # (![Screenshot of emptyExample](emptyExample.png))
+[comment]: <> (![Screenshot of emptyExample](emptyExample.png))
 
 ### Learning Objectives
 
