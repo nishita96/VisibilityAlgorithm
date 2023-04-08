@@ -1,9 +1,12 @@
 #include "ofApp.h"
+#include "segment.hpp"
+#include "vray.hpp"
+//#include <opencv2/opencv.hpp> // for angle between lines
 
 //--------------------------------------------------------------
 void ofApp::setup(){
     // Set the background color to white
-    ofBackground(255);
+    ofBackground(50, 50, 50);
 }
 
 //--------------------------------------------------------------
@@ -13,43 +16,56 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofVec2f pp1;
+    pp1.set(50.0f, 50.0f);
+    
+    vector<segment> listSegments = {
+        segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+        segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // pair above
+        segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // pair bottom
+        segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+        segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+        segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+    };
+    
+//    cout << " here" << seg1.p0.x << " " << seg1.p0.y;
+    
     
     // POLYGON
-    // Define the points of the concave polygon
-    std::vector<ofVec2f> points = {
-        ofVec2f(100, 100),
-        ofVec2f(300, 100),
-        ofVec2f(250, 250),
-        ofVec2f(150, 250)
-    };
-    // Set the color to blue
-    ofSetColor(0, 0, 255);
-    // Draw the polygon and fill it with the specified color
-    ofBeginShape();
-    for (auto p : points) {
+    // Define the points of the concave polygon - pointsToDraw
+    ofSetColor(0, 0, 255); // Set the color to blue
+    ofBeginShape(); // Draw the polygon and fill it with the specified color
+    for (auto p : pointsToDraw) {
         ofVertex(p);
     }
     ofEndShape(true);
-    
-    
 //    cout << " x" << ofGetWindowSize().x << " y" << ofGetWindowSize().y;
     
-    // CIRCLE
-    // Set the color to magenta
-    ofSetColor(255, 0, 255);
-    // Draw a circle with a radius of 50 pixels at the center of the screen
-    ofVec2f center = ofGetWindowSize() / 2;
-    center.set(0.0f, 0.0f);
-    float radius = 50.0f;
-    ofDrawCircle(center, radius);
     
-    // LINE SEGMENT
-    // Set the line color to green
-    ofSetColor(0, 255, 0); // Red color
-    // Set the line width
+    
+    
+    
+    //  - the center point ( CIRCLE )
+    ofSetColor(255, 0, 0);
+    float radiusP = 3.0f;
+    ofDrawCircle(q, radiusP);
+    
+    // line segments ( LINE SEGMENT )
+    ofSetColor(0, 255, 0); // Set the line color to Red color
     ofSetLineWidth(3); // Set line width to 3 pixels
-    // Draw a line segment between two points
-    ofDrawLine(100, 100, 200, 200);
+    for (auto s : listSegments) {
+        ofDrawLine(s.p0.x, s.p0.y, s.p1.x, s.p1.y); // Draw a line segment between two points
+    }
+    
+    // translate to point q
+//    for (auto s : listSegments) {
+//        ofDrawLine(s.p0.x, s.p0.y, s.p1.x, s.p1.y); // Draw a line segment between two points
+//    }
+    // calculate the angle
+//    for (auto s : listSegments) {
+//        float angle = cv::fastAtan2(s.p0.y - s.p1.y, s.p0.x - s.p1.x); // Draw a line segment between two points
+//    }
+    
 }
 
 //--------------------------------------------------------------
