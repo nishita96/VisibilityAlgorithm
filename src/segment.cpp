@@ -8,6 +8,12 @@
 #include "segment.hpp"
 
 
+void segment::translateToQ(ofVec2f pointQ){
+    p0.set(p0.x - pointQ.x, p0.y - pointQ.y);
+    p1.set(p1.x - pointQ.x, p1.y - pointQ.y);
+}
+
+
 int segment::signum(float f) {
    if (f > 0) return 1;
    if (f < 0) return -1;
