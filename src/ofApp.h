@@ -1,6 +1,6 @@
 #pragma once
 #include "ofMain.h"
-//#include "segment.hpp"
+#include "segment.hpp"
 
 
 class ofApp : public ofBaseApp{
@@ -23,5 +23,5 @@ class ofApp : public ofBaseApp{
     
         vector<ofVec2f> pointsToDraw;
         ofVec2f q;
-//        vector<segment> setOfSegments;
+        vector<segment> setOfSegments;
 };

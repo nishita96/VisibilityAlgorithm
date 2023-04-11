@@ -5,14 +5,9 @@
 //  Created by Nishita Kharche on 4/5/23.
 //
 
-#ifndef vray_hpp
-#define vray_hpp
-
+#pragma once
 #include <stdio.h>
 #include "ofMain.h"
-
-#endif /* vray_hpp */
-
 
 
 class vray {
@@ -25,7 +20,7 @@ class vray {
         float r;
         float l;
         
-        void setup();
-        void update();
-        void draw();
+//        void setup();
+//        void update();
+//        void draw();
 };
