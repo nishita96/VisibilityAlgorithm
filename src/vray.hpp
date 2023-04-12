@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include "ofMain.h"
 
-
 class vray {
     public:
         vray(float _theta, ofVec2f _unitVec, float _r, float _l) :
@@ -19,8 +18,5 @@ class vray {
         ofVec2f unitVec;
         float r;
         float l;
-        
-//        void setup();
-//        void update();
-//        void draw();
+    
 };

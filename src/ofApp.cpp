@@ -1,7 +1,4 @@
 #include "ofApp.h"
-//#include "segment.hpp"
-//#include "vray.hpp"
-//#include <opencv2/opencv.hpp> // for angle between lines
 
 //--------------------------------------------------------------
 void ofApp::setup(){

@@ -25,5 +25,4 @@ class segment {
         bool possibleIntersectionTestXAxis();
         ofVec2f splitSegmentInto2();
         bool collinearWithQ(); // q is always 0 after translation
-        
 };

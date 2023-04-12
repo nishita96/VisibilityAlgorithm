@@ -67,3 +67,4 @@ ofVec2f segment::splitSegmentInto2(){
 bool segment::collinearWithQ(){
     return abs(p0.x * p1.y - p0.y * p1.x)/2;
 }
+
