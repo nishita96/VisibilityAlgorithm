@@ -88,6 +88,9 @@ vector<vray> segment::generateVray(segment seg){
     // making ray from p0
     endPoint = ofVec2f(seg.p0.x, -seg.p0.y); // coz coordinate system is downward +y
     theta = xAxisVec.angle(endPoint);
+    if(p0isleft && theta == 0.0f){
+        theta = 360.0f;
+    }
     theta = theta < 0? theta + 360.0f : theta;
     r = p0isleft? endPoint.length() : infinity;
     l = !p0isleft? endPoint.length() : infinity;
@@ -98,6 +101,9 @@ vector<vray> segment::generateVray(segment seg){
     // making ray from p1
     endPoint = ofVec2f(seg.p1.x, -seg.p1.y); // coz coordinate system is downward +y
     theta = xAxisVec.angle(endPoint);
+    if(!p0isleft && theta == 0.0f){
+        theta = 360.0f;
+    }
     theta = theta < 0? theta + 360.0f : theta;
     r = !p0isleft? endPoint.length() : infinity;
     l = p0isleft? endPoint.length() : infinity;

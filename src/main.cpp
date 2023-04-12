@@ -96,7 +96,7 @@ int main( ){
     
     
     
-    // MAKE THE V RAYS
+    // MAKE THE V RAYS // TODO like the pseudocode
     vector<vray> vrays;
     ofVec2f xAxisVec(1,0);
     for (auto seg : listSegmentsCopy){
@@ -104,9 +104,43 @@ int main( ){
         vrays.push_back(seg.generateVray(seg).at(1));
     }
     sort(vrays.begin(), vrays.end(), myComparator); // sorting based on angle, TODO check if this is the best way
+    // handling vrays with same theta
+//    for (vector<segment>::iterator it = listSegments.begin(); it != listSegments.end();){
+//    vector<vray>::iterator it = vrays.begin();
+//    vector<vray>::iterator itTemp = vrays.begin();
+//    for (int i=0; i<vrays.size()-1; i++){
+//        vray& vCurr = vrays.at(i);
+//        vray& vNext = vrays.at(i+1);
+//        if(vCurr.theta == vNext.theta){
+//            itTemp = it;
+//
+//            if(vCurr.r <= vNext.r){
+//                vNext.r = vCurr.r;
+//            }
+//            else{
+//                vCurr.r = vNext.r;
+//            }
+//
+//            if(vCurr.l <= vNext.l){
+//                vNext.l = vCurr.l;
+//            }
+//            else{
+//                vCurr.l = vNext.l;
+//            }
+//
+//            vrays.erase(it);
+//            it = itTemp;
+//        }
+////        else{
+//            ++it;
+////        }
+//    }
+    
     for (auto ray : vrays) {
         cout << "\n theta:" << ray.theta << ", r:" << ray.r << ", l:" << ray.l ;
     }
+    
+    // MERGE
     
     
     
