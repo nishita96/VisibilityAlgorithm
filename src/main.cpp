@@ -10,8 +10,19 @@
 
 
 using namespace std;
+
+void printAllSegments(vector<segment> listSegments){
+    cout << "\n DISPLAYING ALL SEGMENTS";
+    for (auto seg: listSegments){
+        cout << "\n seg (" << seg.p0.x << ", " << seg.p0.y << "), (" << seg.p1.x << ", " << seg.p1.y << ") ";
+    }
+}
+
+const float infinity = 1500.0f;
+
 int main( ){
     // do all processing
+//    INFINITY = 1500.0f;
     
     ofApp ofAppNew;
     
@@ -27,12 +38,6 @@ int main( ){
     ofVec2f pointQ(500,500); //= ofGetWindowSize() / 2;
     ofAppNew.q = pointQ;
     
-//    ofVec2f pp1;
-//    pp1.set(50.0f, 50.0f);
-//    ofVec2f pp2;
-//    pp2.set(250.0f, 250.0f);
-//    segment seg1(pp1, pp2);
-
     // -- made a set of segments covering cases 
     vector<segment> listSegments = {
         segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
@@ -49,24 +54,12 @@ int main( ){
     // PREPROCESS
     // ---- translate all segments to q (q becomes origin)
     for(int i=0; i< 6; i++){ // for (auto seg : listSegments) {
-//        segment& seg = listSegments.at(i); //by reference, not a memory address, wont have illegal values like null
-//        seg.p0.set(seg.p0.x - pointQ.x, seg.p0.y - pointQ.y);
-//        seg.p1.set(seg.p1.x - pointQ.x, seg.p1.y - pointQ.y);
         listSegments.at(i).translateToQ(pointQ);
-//        listSegments.at(i).p0.set(seg.p0.x - pointQ.x, seg.p0.y - pointQ.y); // check if .at() performs better or worse later
-//        cout << "\n here" << seg->p0.x << ", " << seg->p0.y << ", " << seg->p1.x << ", " << seg->p1.y << ", ";
     }
-//    cout << "\n here outside " << listSegments.at(5).p0.x << ", " << listSegments.at(5).p0.y ;
-//    cout << "\n q " << pointQ.x << " " << pointQ.y ;
     cout << "\n size after transalation to Q " << listSegments.size() ;
-    cout << "\n DISPLAY ALL SEGMENTS";
-    for (auto seg: listSegments){
-        cout << "\n seg (" << seg.p0.x << ", " << seg.p0.y << "), (" << seg.p1.x << ", " << seg.p1.y << ") ";
-    }
     
     // ---- removing points collinear (checking - if area of triangle Q p0 p1 = 0 then they are collinear)
     for (vector<segment>::iterator it = listSegments.begin(); it != listSegments.end();){
-//        cout << "\n area " << area ;//<< " points " << seg.p0.x << ", " << seg.p0.y << ", " << seg.p1.x << ", " << seg.p1.y << " \n";
         if(it->collinearWithQ() == 0.0f){
             listSegments.erase(it); // automatically iterates to next item after erasing
         }
@@ -75,59 +68,67 @@ int main( ){
         }
     }
     cout << "\n size after removing collinear segments " << listSegments.size() ;
-    cout << "\n DISPLAY ALL SEGMENTS";
-    for (auto seg: listSegments){
-        cout << "\n seg (" << seg.p0.x << ", " << seg.p0.y << "), (" << seg.p1.x << ", " << seg.p1.y << ") ";
-    }
     
     // ---- divde segment into 2 is cuts xaxis properly (slope != 0)
 //    vector<segment>::iterator it = listSegments.begin(); // has some issue, removes the wrong segment
     vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
-//    int i=0;
     for (auto seg: listSegments){
-//        cout << "\n here" << seg.p0.x << ", " << seg.p0.y << ", " << seg.p1.x << ", " << seg.p1.y << ", ";
-//        cout << "\n possible: " << seg.possibleIntersectionTestXAxis();
         if(seg.possibleIntersectionTestXAxis()){
             ofVec2f splitPoint = seg.splitSegmentInto2();
-//            cout << "\n \t value: x " << splitPoint.x << " y " << splitPoint.y;
             if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
-//                listSegments.erase(it);
-//                listSegments.push_back(segment(seg.p0, splitPoint));
-//                listSegments.push_back(segment(seg.p1, splitPoint));
-                
                 listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
                 listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
             }
             else{
                 listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-//                ++it;
             }
         }
         else{
             listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-//            ++it;
         }
     }
-    cout << "\n size after spliting xaxis segments " << listSegmentsCopy.size() ;
-    cout << "\n DISPLAY ALL SEGMENTS";
-    for (auto seg: listSegmentsCopy){
-        cout << "\n seg (" << seg.p0.x << ", " << seg.p0.y << "), (" << seg.p1.x << ", " << seg.p1.y << ") ";
-    }
-
-//    // -- add segments to draw
-//    ofAppNew.setOfSegments = listSegments;
+    cout << "\n size after spliting xaxis segments(copy) " << listSegmentsCopy.size() << "\n" ;
+    
+    
+    
     
     // MAKE THE V RAYS
     vector<vray> vrays;
-    for (auto seg : listSegments){
-        ofVec2f findAngle = seg.p0;
-        float angle = atan2(-findAngle.y, findAngle.x);
-//        cout << "\n " << findAngle.x << " " << findAngle.y << " angle 1 : " << angle* ( 180 / PI );
-        findAngle = seg.p1;
-        angle = atan2(-findAngle.y, findAngle.x);
-//        cout << "\n " << findAngle.x << " " << findAngle.y << " angle 2 : " << angle* ( 180 / PI );
+    ofVec2f xAxisVec(1,0);
+    for (auto seg : listSegmentsCopy){
+        bool p0isleft = false;
+        if((seg.p0.x * seg.p1.y - seg.p0.y * seg.p1.x)<0){ // p0 X p1
+            // finds out which side is this point so that accordingly we can decide r and l
+            p0isleft = true;
+        }
+
+        float theta;
+        ofVec2f endPoint;
+        float r;
+        float l;
+
+        // making ray from p0
+        endPoint = ofVec2f(seg.p0.x, -seg.p0.y); // coz coordinate system is downward +y
+        theta = xAxisVec.angle(endPoint);
+        theta = theta < 0? theta + 360.0f : theta;
+        r = p0isleft? endPoint.length() : infinity;
+        l = !p0isleft? endPoint.length() : infinity;
+//        cout << "\n p0 (" << endPoint.x << " " << endPoint.y << ") theta:" << theta << ", r:" << r << ", l:" << l ;
+        vrays.push_back(vray(theta, endPoint.getNormalized(), r, l)); //theta,unitvec,right,left
+
+        // making ray from p1
+        endPoint = ofVec2f(seg.p1.x, -seg.p1.y); // coz coordinate system is downward +y
+        theta = xAxisVec.angle(endPoint);
+        theta = theta < 0? theta + 360.0f : theta;
+        r = !p0isleft? endPoint.length() : infinity;
+        l = p0isleft? endPoint.length() : infinity;
+//        cout << "\n p1 (" << endPoint.x << " " << endPoint.y << ") theta:" << theta << ", r:" << r << ", l:" << l ;
+        vrays.push_back(vray(theta, endPoint.getNormalized(), r, l));
     }
-     
+    for (auto ray : vrays) {
+        cout << "\n theta:" << ray.theta << ", r:" << ray.r << ", l:" << ray.l ;
+    }
+    
     
     
     cout << "\n ";
@@ -140,7 +141,7 @@ int main( ){
 
 }
 
-/* class segment
+/* class SEGMENT
  
  point = 2 float values for X and Y
  segment = set of 2 points
@@ -150,3 +151,19 @@ int main( ){
  input = point Q AND set of line segment (point p0, point p1)
 
 */
+
+
+/*
+ SCRAP CODE WITH GOOD CPP OPTIONS/IDEAS
+ 
+ //        segment& seg = listSegments.at(i); //by reference-not a memory address,wont have illegal values (null)
+ //        seg.p0.set(seg.p0.x - pointQ.x, seg.p0.y - pointQ.y);
+ //        seg.p1.set(seg.p1.x - pointQ.x, seg.p1.y - pointQ.y);
+ 
+ //        float angle = atan2(-findAngle.y, findAngle.x);
+ //        float theta = angle * ( 180 / PI );
+ //        theta = (theta < 0)? theta + 360.0f : theta;
+ 
+ 
+ 
+ */
