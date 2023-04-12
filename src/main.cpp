@@ -53,7 +53,7 @@ int main( ){
     
     // PREPROCESS
     // ---- translate all segments to q (q becomes origin)
-    for(int i=0; i< 6; i++){ // for (auto seg : listSegments) {
+    for(int i=0; i< 6; i++){
         listSegments.at(i).translateToQ(pointQ);
     }
     cout << "\n size after transalation to Q " << listSegments.size() ;
@@ -96,34 +96,8 @@ int main( ){
     vector<vray> vrays;
     ofVec2f xAxisVec(1,0);
     for (auto seg : listSegmentsCopy){
-        bool p0isleft = false;
-        if((seg.p0.x * seg.p1.y - seg.p0.y * seg.p1.x)<0){ // p0 X p1
-            // finds out which side is this point so that accordingly we can decide r and l
-            p0isleft = true;
-        }
-
-        float theta;
-        ofVec2f endPoint;
-        float r;
-        float l;
-
-        // making ray from p0
-        endPoint = ofVec2f(seg.p0.x, -seg.p0.y); // coz coordinate system is downward +y
-        theta = xAxisVec.angle(endPoint);
-        theta = theta < 0? theta + 360.0f : theta;
-        r = p0isleft? endPoint.length() : infinity;
-        l = !p0isleft? endPoint.length() : infinity;
-//        cout << "\n p0 (" << endPoint.x << " " << endPoint.y << ") theta:" << theta << ", r:" << r << ", l:" << l ;
-        vrays.push_back(vray(theta, endPoint.getNormalized(), r, l)); //theta,unitvec,right,left
-
-        // making ray from p1
-        endPoint = ofVec2f(seg.p1.x, -seg.p1.y); // coz coordinate system is downward +y
-        theta = xAxisVec.angle(endPoint);
-        theta = theta < 0? theta + 360.0f : theta;
-        r = !p0isleft? endPoint.length() : infinity;
-        l = p0isleft? endPoint.length() : infinity;
-//        cout << "\n p1 (" << endPoint.x << " " << endPoint.y << ") theta:" << theta << ", r:" << r << ", l:" << l ;
-        vrays.push_back(vray(theta, endPoint.getNormalized(), r, l));
+        vrays.push_back(seg.generateVray(seg).at(0));
+        vrays.push_back(seg.generateVray(seg).at(1));
     }
     for (auto ray : vrays) {
         cout << "\n theta:" << ray.theta << ", r:" << ray.r << ", l:" << ray.l ;
