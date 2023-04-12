@@ -20,8 +20,6 @@ class segment {
     
         ofVec2f p0;
         ofVec2f p1;
-//        vray p0vray;
-//        vray p1vray;
         
         int signum(float f);
         void translateToQ(ofVec2f q);

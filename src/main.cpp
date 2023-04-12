@@ -18,6 +18,10 @@ void printAllSegments(vector<segment> listSegments){
     }
 }
 
+bool myComparator(vray a, vray b){
+    return a.theta < b.theta;
+}
+
 const float infinity = 1500.0f;
 
 int main( ){
@@ -99,6 +103,7 @@ int main( ){
         vrays.push_back(seg.generateVray(seg).at(0));
         vrays.push_back(seg.generateVray(seg).at(1));
     }
+    sort(vrays.begin(), vrays.end(), myComparator); // sorting based on angle, TODO check if this is the best way
     for (auto ray : vrays) {
         cout << "\n theta:" << ray.theta << ", r:" << ray.r << ", l:" << ray.l ;
     }
@@ -106,6 +111,7 @@ int main( ){
     
     
     cout << "\n ";
+    
 	ofSetupOpenGL(1024,768, OF_WINDOW);			// <-------- setup the GL context
 
 	// this kicks off the running of my app
