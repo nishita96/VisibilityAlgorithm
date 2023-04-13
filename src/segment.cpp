@@ -99,44 +99,25 @@ bool segment::collinearWithQ(){
 
 vector<vray> segment::generateVray(segment seg){
     vector<vray> bothVray;
-    ofVec2f xAxisVec(1,0);
+    ofVec2f xAxisVec(1.0,0.0);
     float infinity = 1500.0f;
-    bool p0isleft = false;
-    if((seg.p0.x * seg.p1.y - seg.p0.y * seg.p1.x)<0){ // p0 X p1
-        // finds out which side is this point so that accordingly we can decide r and l
-        p0isleft = true;
-    }
-
-    float theta;
-    ofVec2f endPoint;
-    float r;
-    float l;
-
     
-    // making ray from p0
-    endPoint = ofVec2f(seg.p0.x, seg.p0.y); // coz coordinate system is downward +y
-    theta = xAxisVec.angle(endPoint);
-    if(p0isleft && theta == 0.0f){
-        theta = 360.0f;
+    if((seg.p0.x * seg.p1.y - seg.p0.y * seg.p1.x) < 0){ // p0 X p1
+        // to ensure p0 theta < p1 theta
+        swap(seg.p0, seg.p1);
     }
-    theta = theta < 0? theta + 360.0f : theta;
-    r = p0isleft? endPoint.length() : infinity;
-    l = !p0isleft? endPoint.length() : infinity;
-//        cout << "\n p0 (" << endPoint.x << " " << endPoint.y << ") theta:" << theta << ", r:" << r << ", l:" << l ;
-    bothVray.push_back(vray(theta, endPoint.getNormalized(), r, l)); //theta,unitvec,right,left
-
-    
-    // making ray from p1
-    endPoint = ofVec2f(seg.p1.x, seg.p1.y); // coz coordinate system is downward +y
-    theta = xAxisVec.angle(endPoint);
-    if(!p0isleft && theta == 0.0f){
-        theta = 360.0f;
+    float theta0 = xAxisVec.angle(seg.p0);
+    float theta1;
+    if(xAxisVec.angle(seg.p1) == 0.0f){
+        theta1 = 360.0;
     }
-    theta = theta < 0? theta + 360.0f : theta;
-    r = !p0isleft? endPoint.length() : infinity;
-    l = p0isleft? endPoint.length() : infinity;
-//        cout << "\n p1 (" << endPoint.x << " " << endPoint.y << ") theta:" << theta << ", r:" << r << ", l:" << l ;
-    bothVray.push_back(vray(theta, endPoint.getNormalized(), r, l));
+    else{
+        theta1 = xAxisVec.angle(seg.p1);
+    }
+    theta0 = theta0 < 0? theta0 + 360.0f : theta0;
+    theta1 = theta1 < 0? theta1 + 360.0f : theta1;
+    bothVray.push_back(vray(theta0, seg.p0.getNormalized(), infinity, seg.p0.length()));
+    bothVray.push_back(vray(theta1, seg.p1.getNormalized(), seg.p1.length(), infinity));
     
     return bothVray;
 }
