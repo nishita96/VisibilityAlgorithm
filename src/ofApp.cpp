@@ -30,6 +30,13 @@ void ofApp::draw(){
         ofVertex(pointsForTriangle.at(i+2));
         ofEndShape(true);
     }
+//    int i=0;
+//    ofBeginShape();
+//    ofVertex(pointsForTriangle.at(i));
+//    ofVertex(pointsForTriangle.at(i+1));
+//    ofVertex(pointsForTriangle.at(i+2));
+//    ofEndShape(true);
+//    i=3;
     
 //    ofBeginShape(); // Draw the polygon and fill it with the specified color
 //    for (auto seg : pointsToDraw) {

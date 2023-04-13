@@ -100,7 +100,7 @@ bool segment::collinearWithQ(){
 vector<vray> segment::generateVray(segment seg){
     vector<vray> bothVray;
     ofVec2f xAxisVec(1.0,0.0);
-    float infinity = 1500.0f;
+    float infinity = 9999.0f;
     
     if((seg.p0.x * seg.p1.y - seg.p0.y * seg.p1.x) < 0){ // p0 X p1
         // to ensure p0 theta < p1 theta

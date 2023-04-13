@@ -15,7 +15,7 @@ vector<vray> mergeVraysAll(vector<vray> l1, vector<vray> l2);
 void printAllSegments(vector<segment> listSegments);
 void printAllVrays(vector<vray> vrays);
 bool myComparator(vray a, vray b);
-const float infinity = 1500.0f;
+const float infinity = 9999.0f;
 
 void divideVrays(vector<vray> v){
     if(v.size() == 1){
@@ -36,105 +36,8 @@ void divideVrays(vector<vray> v){
     
     divideVrays(left);
     divideVrays(right);
-    mergeVraysAll(left, right);
+    mergeVrays(left, right);
     return;
-}
-
-
-vector<vray> mergeVraysAll(vector<vray> l1, vector<vray> l2){
-    vector<vray> l;
-    
-    int n = l1.size() + l2.size();
-    int n1 = l1.size();
-    int n2 = l2.size();
-    cout <<  "\n size l1:" << l1.size() << " l2:" << l2.size() << " l:" << l.size();
-    cout << "\n l1";
-    printAllVrays(l1);
-    cout << "\n l2";
-    printAllVrays(l2);
-    
-    int i = 0; // diff from paper
-    int i1 = 0;
-    int i2 = 0;
-    int k = 0;
-    int t = 0;
-    
-    vector<vray> lk;
-    vector<vray> lt;
-    int ik;
-    int it;
-    
-
-    while(i < n){
-        if(i2 >= n2){
-            k = 1;
-            ik = i1;
-            lk = l1;
-            t = 2;
-            it = i2;
-            lt = l2;
-        }
-        else if(i1 >= n1){
-            k = 2;
-            ik = i2;
-            lk = l2;
-            t = 1;
-            it = i1;
-            lt = l1;
-        }
-        else if(l1.at(i1).theta <= l2.at(i2).theta){
-            k = 1;
-            ik = i1;
-            lk = l1;
-            t = 2;
-            it = i2;
-            lt = l2;
-        }
-        else{
-            k = 2;
-            ik = i2;
-            lk = l2;
-            t = 1;
-            it = i1;
-            lt = l1;
-        }
-
-        l.push_back(lk.at(ik));
-        cout << "\n here: " << l.at(i).theta << " " << l.at(i).r << " " << l.at(i).l;
-
-        
-//        if(0 < it && it <= lt.size() && lt.at(it-1).r < infinity ){
-        if(0 < it && it < lt.size() && lt.at(it).r < infinity ){
-            cout << "\n entering:";
-            segment s = segment(lt.at(it-1).unitVec * lt.at(it-1).l, lt.at(it).unitVec * lt.at(it).r);
-            float thetaRad = l.at(i).theta * PI / 180.0;
-            segment other(ofVec2f(0.0f, 0.0f), ofVec2f(1500.0f * cos(thetaRad), 1500.0f * sin(thetaRad))); // x axis as segment
-            ofVec2f p = s.intersectionWithGivenSegment(other);
-            if(p != ofVec2f(0.0f, 0.0f)){
-                cout << "\n point" << p.x << " " << p.y ;
-//                l.at(i).l = min(l.at(i).l, p.length());
-//                l.at(i).r = min(l.at(i).r, p.length());
-            }
-            else{
-                cout << "\n it is null - did not find an intersection ";
-            }
-            l.at(i).l = min(l.at(i).l, p.length());
-            l.at(i).r = min(l.at(i).r, p.length());
-
-        }
-
-        if(k == 1){
-            i1 = i1 + 1; // can assign k = i1 or i2 initially based on condition so that we  have to chec value of k again n again
-        }
-        else{
-            i2 = i2 + 1;
-        }
-        i = i + 1;
-    }
-    
-    cout << "\n l";
-    printAllVrays(l);
-    return l;
 }
 
 vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2){
@@ -202,12 +105,12 @@ vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2){
             float thetaRad = l.at(i).theta * PI / 180.0;
             segment other(ofVec2f(0.0f, 0.0f), ofVec2f(1500.0f * cos(thetaRad), 1500.0f * sin(thetaRad))); // x axis as segment
             ofVec2f p = s.intersectionWithGivenSegment(other);
-            if(p != ofVec2f(0.0f, 0.0f)){
-                cout << "\n point" << p.x << " " << p.y ;
-            }
-            else{
-                cout << "\n it is null - did not find an intersection ";
-            }
+//            if(p != ofVec2f(0.0f, 0.0f)){
+//                cout << "\n point" << p.x << " " << p.y ;
+//            }
+//            else{
+//                cout << "\n it is null - did not find an intersection ";
+//            }
             
 
             l.at(i).l = min(l.at(i).l, p.length());
@@ -250,7 +153,6 @@ bool myComparator(vray a, vray b){
 
 int main( ){
     // do all processing
-//    INFINITY = 1500.0f;
     
     ofApp ofAppNew;
     
@@ -263,11 +165,13 @@ int main( ){
     
     // ---- made a set of segments covering cases
     vector<segment> listSegments = {
-//        segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+        segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
         segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
         segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
         segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
         segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+
+//        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
     };
     
@@ -295,11 +199,13 @@ int main( ){
     // ---- divde segment into 2 is cuts xaxis properly (slope != 0)
 //    vector<segment>::iterator it = listSegments.begin(); // TODO has some issue, removes the wrong segment
     vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
+    bool splitsAtX = false;
     for (auto seg: listSegments){
         if(seg.possibleIntersectionTestXAxis()){
             ofVec2f splitPoint = seg.splitSegmentInto2();
             if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
                 // TODO check if you need to check which has smaller angle
+                splitsAtX = true;
                 listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
                 listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
             }
@@ -326,12 +232,15 @@ int main( ){
 //    cout << "\n all vrays: ";
 //    printAllVrays(vrays);
     
-    // ---- sorting based on angels
-//    sort(vrays.begin(), vrays.end(), myComparator); // sorting based on angle, TODO check if this is the best way
-//    // TODO check if you need handling vrays with same theta
-//    cout << "\n after sorting: ";
-//    printAllVrays(vrays);
-
+    // to handle the edge case where more than 1 line cuts at xaxis
+    int minValueR = 9999.0f;
+    if(splitsAtX){
+        for(auto vray : vrays){
+            if(vray.theta == 360.0f && vray.r < minValueR){
+                minValueR = vray.r;
+            }
+        }
+    }
     
     // MERGE, TODO currently sequential
     vector<vray> vrayForMerge;
@@ -345,41 +254,11 @@ int main( ){
         vrayNewPair.push_back(seg.generateVray(seg).at(1));
         vrayForMerge = mergeVrays(vrayForMerge, vrayNewPair);
     }
+    
+    vrayForMerge.push_back(vray(360.0, ofVec2f(1.0f, 0.0f), minValueR, infinity));
+    
 //    cout << "\n after merge vrays: ";
 //    printAllVrays(vrayForMerge);
-    
-    
-//    // working - pair top and pair bottom
-//    cout << "\n SEE FROM HERE";
-//    vector<vray> l1;
-//    l1.push_back(vrays.at(2));
-//    l1.push_back(vrays.at(3));
-//    vector<vray> l2;
-//    l2.push_back(vrays.at(0));
-//    l2.push_back(vrays.at(1));
-//    vector<vray> l = mergeVrays(l1, l2);
-    
-    
-//    // working - top horizontal and pair top line
-//    cout << "\n SEE FROM HERE";
-//    vector<vray> l1;
-//    l1.push_back(vrays.at(3));
-//    l1.push_back(vrays.at(2));
-//    vector<vray> l2;
-//    l2.push_back(vrays.at(1));
-//    l2.push_back(vrays.at(0));
-//    vector<vray> l = mergeVrays(l1, l2);
-
-    
-//    //  working
-//    cout << "\n SEE FROM HERE";
-//    vector<vray> l1;
-//    l1.push_back(vray(33.69, ofVec2f(0.83205,0.5547), 1500.0, 180.278));
-//    l1.push_back(vray(63.435, ofVec2f(0.447214,0.894427), 447.214, 1500.0));
-//    vector<vray> l2;
-//    l2.push_back(vray(49.3987, ofVec2f(0.650791,0.759257), 1500.0, 1500.0));
-//    vector<vray> l = mergeVrays(l1, l2);
-    
 
     
     // TODO ignore the point 0.0f,0.0f , might make some cases bad
@@ -396,27 +275,37 @@ int main( ){
     float yy = 0.0f;
     
     pointsPolygon.push_back(ofVec2f(infinity, pointQ.y));
-//    cout << "\n - - 1500.0 " << pointQ.y ;
+//    cout << "\n - : 1500.0 " << pointQ.y ;
     for(int i=0; i<vrayForMerge.size(); i++){
         v = vrayForMerge.at(i);
+        
+        if(v.r == 0.0 && v.l == 0.0){ // takes care of that null issue which I am not able to pass
+            continue;
+        }
+        else if(v.theta == 360.0 && i != vrayForMerge.size()-1){
+            continue;
+        }
+        
         xx = (v.unitVec * v.r).x + pointQ.x;
         yy = (-(v.unitVec * v.r).y) + pointQ.y;
         pointsPolygon.push_back(ofVec2f(xx, yy)); // adding point
-//        cout << "\n r -" << xx << " " << yy ;
+//        cout << "\n r : " << xx << " " << yy ;
         pointsPolygon.push_back(ofVec2f(pointQ.x, pointQ.y)); // adding point
-//        cout << "\n - - " << pointQ.x << " " << pointQ.y ;
+//        cout << "\n - : " << pointQ.x << " " << pointQ.y ;
+//        cout << "\n ----------------------------------" ;
         xx = (v.unitVec * v.l).x + pointQ.x;
         yy = (-(v.unitVec * v.l).y) + pointQ.y;
         pointsPolygon.push_back(ofVec2f(xx, yy)); // adding point
-//        cout << "\n l -" << xx << " " << yy ;
+//        cout << "\n l : " << xx << " " << yy ;
     };
     pointsPolygon.push_back(ofVec2f(infinity, pointQ.y));
-//    cout << "\n - - 1500.0 " << pointQ.y ;
+//    cout << "\n - : 1500.0 " << pointQ.y ;
     pointsPolygon.push_back(ofVec2f(pointQ.x, pointQ.y));
-//    cout << "\n - - " << pointQ.x << " " << pointQ.y ;
+//    cout << "\n - : " << pointQ.x << " " << pointQ.y ;
 //    cout << "\n size:" << pointsPolygon.size();
 //    ofAppNew.pointsToDraw = pointsPolygon;
     ofAppNew.pointsForTriangle = pointsPolygon;
+    
     // TODO take care of when angle is 180, the trianlge looks like a line
     
 
