@@ -21,7 +21,8 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        vector<ofVec2f> pointsToDraw;
+//        vector<ofVec2f> pointsToDraw;
         ofVec2f q;
         vector<segment> setOfSegments;
+        vector<ofVec2f> pointsForTriangle;
 };

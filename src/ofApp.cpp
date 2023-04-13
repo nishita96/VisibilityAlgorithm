@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     // Set the background color to white
-    ofBackground(50, 50, 50);
+    ofBackground(255, 255, 255);
 }
 
 //--------------------------------------------------------------
@@ -18,25 +18,34 @@ void ofApp::draw(){
     
 //    cout << " here" << seg1.p0.x << " " << seg1.p0.y;
     
-    
-    // POLYGON
+
+    // --- drawing the triangles showing visible area ( POLYGON )
     // Define the points of the concave polygon - pointsToDraw
-    ofSetColor(0, 0, 255); // Set the color to blue
-    ofBeginShape(); // Draw the polygon and fill it with the specified color
-    for (auto seg : pointsToDraw) {
-        ofVertex(seg);
+    ofSetColor(204, 229, 255); // Set the color to blue
+    
+    for(int i=0; i<pointsForTriangle.size(); i=i+3){
+        ofBeginShape();
+        ofVertex(pointsForTriangle.at(i));
+        ofVertex(pointsForTriangle.at(i+1));
+        ofVertex(pointsForTriangle.at(i+2));
+        ofEndShape(true);
     }
-    ofEndShape(true);
+    
+//    ofBeginShape(); // Draw the polygon and fill it with the specified color
+//    for (auto seg : pointsToDraw) {
+//        ofVertex(seg);
+//    }
+//    ofEndShape(true);
 //    cout << " x" << ofGetWindowSize().x << " y" << ofGetWindowSize().y;
     
     
-    //  - the center point ( CIRCLE )
-    ofSetColor(255, 0, 0);
-    float radiusP = 3.0f;
+    // ---- the center point ( CIRCLE )
+    ofSetColor(204, 0, 0);
+    float radiusP = 4.0f;
     ofDrawCircle(q, radiusP);
     
-    // line segments ( LINE SEGMENT )
-    ofSetColor(0, 255, 0); // Set the line color to Red color
+    // ---- line segments ( LINE SEGMENT )
+    ofSetColor(0, 102, 51); // Set the line color to Red color
     ofSetLineWidth(3); // Set line width to 3 pixels
     for (auto s : setOfSegments) {
         ofDrawLine(s.p0.x, s.p0.y, s.p1.x, s.p1.y); // Draw a line segment between two points

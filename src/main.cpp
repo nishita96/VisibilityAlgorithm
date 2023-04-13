@@ -143,11 +143,11 @@ vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2){
     int n = l1.size() + l2.size();
     int n1 = l1.size();
     int n2 = l2.size();
-    cout <<  "\n size l1:" << l1.size() << " l2:" << l2.size() << " l:" << l.size();
-    cout << "\n l1";
-    printAllVrays(l1);
-    cout << "\n l2";
-    printAllVrays(l2);
+//    cout <<  "\n size l1:" << l1.size() << " l2:" << l2.size() << " l:" << l.size();
+//    cout << "\n l1";
+//    printAllVrays(l1);
+//    cout << "\n l2";
+//    printAllVrays(l2);
     
     int i = 0; // diff from paper
     int i1 = 0;
@@ -223,8 +223,8 @@ vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2){
         i = i + 1;
     }
     
-    cout << "\n l";
-    printAllVrays(l);
+//    cout << "\n l";
+//    printAllVrays(l);
     return l;
 }
 
@@ -254,15 +254,6 @@ int main( ){
     
     ofApp ofAppNew;
     
-    // -- points to draw polygon
-    vector<ofVec2f> pointsPolygon = {
-        ofVec2f(50, 50),
-        ofVec2f(100, 50),
-        ofVec2f(150, 100),
-        ofVec2f(50, 150)
-    };
-    ofAppNew.pointsToDraw = pointsPolygon;
-    
     
     
     
@@ -275,8 +266,8 @@ int main( ){
 //        segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
         segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
         segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-//        segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-//        segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+        segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+        segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
     };
     
@@ -308,6 +299,7 @@ int main( ){
         if(seg.possibleIntersectionTestXAxis()){
             ofVec2f splitPoint = seg.splitSegmentInto2();
             if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
+                // TODO check if you need to check which has smaller angle
                 listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
                 listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
             }
@@ -331,8 +323,8 @@ int main( ){
         vrays.push_back(seg.generateVray(seg).at(0));
         vrays.push_back(seg.generateVray(seg).at(1));
     }
-    cout << "\n all vrays: ";
-    printAllVrays(vrays);
+//    cout << "\n all vrays: ";
+//    printAllVrays(vrays);
     
     // ---- sorting based on angels
 //    sort(vrays.begin(), vrays.end(), myComparator); // sorting based on angle, TODO check if this is the best way
@@ -341,36 +333,30 @@ int main( ){
 //    printAllVrays(vrays);
 
     
-    // MERGE
-//    vector<vray> ll;
-//    vray start(0.0, ofVec2f(1500.0, 0.0), 1500.0, 1500.0);
-//    vray end(360.0, ofVec2f(1500.0, 0.0), 1500.0, 1500.0);
-//    ll.push_back(start);
-//    for(int i=0; i<vrays.size(); i=i+1){
-//        ll.push_back(vrays.at(i));
-//    }
-//    ll.push_back(end);
-//    cout << "\n before merging: ";
-//    printAllVrays(ll);
-//    divideVrays(ll);
-//    cout << "\n after merging: ";
-//    printAllVrays(ll);
-    
-    
-    
-//    divideVrays(vrays);
-//    cout << "\n after merging: ";
-//    printAllVrays(vrays);
+    // MERGE, TODO currently sequential
+    vector<vray> vrayForMerge;
+    vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(0));
+    vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(1));
+    vector<vray> vrayNewPair;
+    for (int i=1; i<listSegmentsCopy.size(); i++){
+        segment seg = listSegmentsCopy.at(i);
+        vrayNewPair.clear();
+        vrayNewPair.push_back(seg.generateVray(seg).at(0));
+        vrayNewPair.push_back(seg.generateVray(seg).at(1));
+        vrayForMerge = mergeVrays(vrayForMerge, vrayNewPair);
+    }
+//    cout << "\n after merge vrays: ";
+//    printAllVrays(vrayForMerge);
     
     
 //    // working - pair top and pair bottom
 //    cout << "\n SEE FROM HERE";
 //    vector<vray> l1;
-//    l1.push_back(vrays.at(3));
 //    l1.push_back(vrays.at(2));
+//    l1.push_back(vrays.at(3));
 //    vector<vray> l2;
-//    l2.push_back(vrays.at(1));
 //    l2.push_back(vrays.at(0));
+//    l2.push_back(vrays.at(1));
 //    vector<vray> l = mergeVrays(l1, l2);
     
     
@@ -394,28 +380,46 @@ int main( ){
 //    l2.push_back(vray(49.3987, ofVec2f(0.650791,0.759257), 1500.0, 1500.0));
 //    vector<vray> l = mergeVrays(l1, l2);
     
-    
-//    vector<vray> ll;
-//    vray start(0.0, ofVec2f(1500.0, 0.0), 1500.0, 1500.0);
-//    vray end(360.0, ofVec2f(1500.0, 0.0), 1500.0, 1500.0);
-//    ll.push_back(start);
-//    for(int i=2; i<6; i=i+1){
-//        ll.push_back(vrays.at(i));
-//    }
-//    ll.push_back(end);
-//    cout << "\n ll size " << ll.size();
-//    printAllVrays(ll);
-//    cout << "\n dividing: \n";
-//    divideVrays(ll); // TODO do not pass size 0 vector
-//    cout << "\n result: \n";
-//    printAllVrays(ll);
+
     
     // TODO ignore the point 0.0f,0.0f , might make some cases bad
     
 
     cout << "\n ";
     
-    // TODO UNDO CHANGE, UNCOMMENT
+    
+    // POINTS TO DRAW THE POLYGON
+    // ---- points to draw polygon
+    vector<ofVec2f> pointsPolygon;
+    vray v = vrayForMerge.at(0);
+    float xx = 0.0f;
+    float yy = 0.0f;
+    
+    pointsPolygon.push_back(ofVec2f(infinity, pointQ.y));
+//    cout << "\n - - 1500.0 " << pointQ.y ;
+    for(int i=0; i<vrayForMerge.size(); i++){
+        v = vrayForMerge.at(i);
+        xx = (v.unitVec * v.r).x + pointQ.x;
+        yy = (-(v.unitVec * v.r).y) + pointQ.y;
+        pointsPolygon.push_back(ofVec2f(xx, yy)); // adding point
+//        cout << "\n r -" << xx << " " << yy ;
+        pointsPolygon.push_back(ofVec2f(pointQ.x, pointQ.y)); // adding point
+//        cout << "\n - - " << pointQ.x << " " << pointQ.y ;
+        xx = (v.unitVec * v.l).x + pointQ.x;
+        yy = (-(v.unitVec * v.l).y) + pointQ.y;
+        pointsPolygon.push_back(ofVec2f(xx, yy)); // adding point
+//        cout << "\n l -" << xx << " " << yy ;
+    };
+    pointsPolygon.push_back(ofVec2f(infinity, pointQ.y));
+//    cout << "\n - - 1500.0 " << pointQ.y ;
+    pointsPolygon.push_back(ofVec2f(pointQ.x, pointQ.y));
+//    cout << "\n - - " << pointQ.x << " " << pointQ.y ;
+//    cout << "\n size:" << pointsPolygon.size();
+//    ofAppNew.pointsToDraw = pointsPolygon;
+    ofAppNew.pointsForTriangle = pointsPolygon;
+    // TODO take care of when angle is 180, the trianlge looks like a line
+    
+
 	ofSetupOpenGL(1024,768, OF_WINDOW);			// <-------- setup the GL context
 
 	// this kicks off the running of my app
