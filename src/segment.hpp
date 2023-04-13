@@ -25,6 +25,7 @@ class segment {
         void translateToQ(ofVec2f q);
         bool possibleIntersectionTestXAxis();
         ofVec2f splitSegmentInto2();
+        ofVec2f intersectionWithGivenSegment(segment other);
         bool collinearWithQ(); // q is always 0 after translation
         vector<vray> generateVray(segment seg);
 };
