@@ -151,124 +151,7 @@ bool myComparator(vray a, vray b){
     return a.theta < b.theta;
 }
 
-int main( ){
-    // do all processing
-    
-    ofApp ofAppNew;
-    
-    
-    
-    
-    // ---- define the point Q
-    ofVec2f pointQ(500,500); //= ofGetWindowSize() / 2;
-    ofAppNew.q = pointQ;
-    
-    // ---- made a set of segments covering cases
-    vector<segment> listSegments = {
-        segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
-        segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
-        segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-        segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-        segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
-
-//        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
-        segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
-    };
-    
-    // ---- add segments to draw
-    ofAppNew.setOfSegments = listSegments;
-    
-    // PREPROCESS
-    // ---- translate all segments to q (q becomes origin)
-    for(int i=0; i< listSegments.size(); i++){
-        listSegments.at(i).translateToQ(pointQ);
-    }
-//    cout << "\n size after transalation to Q " << listSegments.size() ;
-    
-    // ---- removing points collinear (checking - if area of triangle Q p0 p1 = 0 then they are collinear)
-    for (vector<segment>::iterator it = listSegments.begin(); it != listSegments.end();){
-        if(it->collinearWithQ() == 0.0f){
-            listSegments.erase(it); // automatically iterates to next item after erasing
-        }
-        else{
-            ++it;
-        }
-    }
-//    cout << "\n size after removing collinear segments " << listSegments.size() ;
-    
-    // ---- divde segment into 2 is cuts xaxis properly (slope != 0)
-//    vector<segment>::iterator it = listSegments.begin(); // TODO has some issue, removes the wrong segment
-    vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
-    bool splitsAtX = false;
-    for (auto seg: listSegments){
-        if(seg.possibleIntersectionTestXAxis()){
-            ofVec2f splitPoint = seg.splitSegmentInto2();
-            if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
-                // TODO check if you need to check which has smaller angle
-                splitsAtX = true;
-                listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
-                listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
-            }
-            else{
-                listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-            }
-        }
-        else{
-            listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-        }
-    }
-//    cout << "\n size after spliting xaxis segments(copy) " << listSegmentsCopy.size() << "\n" ;
-    
-    
-    
-    
-    // MAKE THE V RAYS // TODO like the pseudocode
-    vector<vray> vrays;
-    ofVec2f xAxisVec(1,0);
-    for (auto seg : listSegmentsCopy){
-        vrays.push_back(seg.generateVray(seg).at(0));
-        vrays.push_back(seg.generateVray(seg).at(1));
-    }
-//    cout << "\n all vrays: ";
-//    printAllVrays(vrays);
-    
-    // to handle the edge case where more than 1 line cuts at xaxis
-    int minValueR = 9999.0f;
-    if(splitsAtX){
-        for(auto vray : vrays){
-            if(vray.theta == 360.0f && vray.r < minValueR){
-                minValueR = vray.r;
-            }
-        }
-    }
-    
-    // MERGE, TODO currently sequential
-    vector<vray> vrayForMerge;
-    vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(0));
-    vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(1));
-    vector<vray> vrayNewPair;
-    for (int i=1; i<listSegmentsCopy.size(); i++){
-        segment seg = listSegmentsCopy.at(i);
-        vrayNewPair.clear();
-        vrayNewPair.push_back(seg.generateVray(seg).at(0));
-        vrayNewPair.push_back(seg.generateVray(seg).at(1));
-        vrayForMerge = mergeVrays(vrayForMerge, vrayNewPair);
-    }
-    
-    vrayForMerge.push_back(vray(360.0, ofVec2f(1.0f, 0.0f), minValueR, infinity));
-    
-//    cout << "\n after merge vrays: ";
-//    printAllVrays(vrayForMerge);
-
-    
-    // TODO ignore the point 0.0f,0.0f , might make some cases bad
-    
-
-    cout << "\n ";
-    
-    
-    // POINTS TO DRAW THE POLYGON
-    // ---- points to draw polygon
+vector<ofVec2f> calculatePointsForTriangles(vector<vray> vrayForMerge, ofVec2f pointQ){
     vector<ofVec2f> pointsPolygon;
     vray v = vrayForMerge.at(0);
     float xx = 0.0f;
@@ -304,13 +187,142 @@ int main( ){
 //    cout << "\n - : " << pointQ.x << " " << pointQ.y ;
 //    cout << "\n size:" << pointsPolygon.size();
 //    ofAppNew.pointsToDraw = pointsPolygon;
-    ofAppNew.pointsForTriangle = pointsPolygon;
+    
+    return pointsPolygon;
+}
+
+int main( ){
+    // do all processing
+    
+    ofApp ofAppNew;
+    
+    
+    
+    // ISSUE the lines have to be non intersecting - how to generate them dynamically?
+    
+    // ---- define the point Q
+    ofVec2f pointQ(500,400); //= ofGetWindowSize() / 2;
+    ofAppNew.q = pointQ;
+    
+    // ---- made a set of segments covering cases
+    vector<segment> listSegments = {
+        segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+        segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+        segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+        segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+        segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+
+//        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+        segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+    };
+    
+    // ---- add segments to draw
+    ofAppNew.setOfSegmentsOriginal = listSegments;
+    ofAppNew.setOfSegmentsToDraw = listSegments;
+    ofAppNew.setOfSegments = listSegments;
+    
+    
+//    // PREPROCESS
+//    // ---- translate all segments to q (q becomes origin)
+//    for(int i=0; i< listSegments.size(); i++){
+//        listSegments.at(i).translateToQ(pointQ);
+//    }
+////    cout << "\n size after transalation to Q " << listSegments.size() ;
+//
+//    // ---- removing points collinear (checking - if area of triangle Q p0 p1 = 0 then they are collinear)
+//    for (vector<segment>::iterator it = listSegments.begin(); it != listSegments.end();){
+//        if(it->collinearWithQ() == 0.0f){
+//            listSegments.erase(it); // automatically iterates to next item after erasing
+//        }
+//        else{
+//            ++it;
+//        }
+//    }
+////    cout << "\n size after removing collinear segments " << listSegments.size() ;
+//
+//    // ---- divde segment into 2 is cuts xaxis properly (slope != 0)
+////    vector<segment>::iterator it = listSegments.begin(); // TODO has some issue, removes the wrong segment
+//    vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
+//    bool splitsAtX = false;
+//    for (auto seg: listSegments){
+//        if(seg.possibleIntersectionTestXAxis()){
+//            ofVec2f splitPoint = seg.splitSegmentInto2();
+//            if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
+//                // TODO check if you need to check which has smaller angle
+//                splitsAtX = true;
+//                listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
+//                listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
+//            }
+//            else{
+//                listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
+//            }
+//        }
+//        else{
+//            listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
+//        }
+//    }
+////    cout << "\n size after spliting xaxis segments(copy) " << listSegmentsCopy.size() << "\n" ;
+//
+//
+//
+    
+//    // MAKE THE V RAYS // TODO like the pseudocode
+//    vector<vray> vrays;
+//    ofVec2f xAxisVec(1,0);
+//    for (auto seg : listSegmentsCopy){
+//        vrays.push_back(seg.generateVray(seg).at(0));
+//        vrays.push_back(seg.generateVray(seg).at(1));
+//    }
+////    cout << "\n all vrays: ";
+////    printAllVrays(vrays);
+//    
+//    // to handle the edge case where more than 1 line cuts at xaxis
+//    int minValueR = 9999.0f;
+//    if(splitsAtX){
+//        for(auto vray : vrays){
+//            if(vray.theta == 360.0f && vray.r < minValueR){
+//                minValueR = vray.r;
+//            }
+//        }
+//    }
+    
+//    // MERGE, TODO currently sequential
+//    vector<vray> vrayForMerge;
+//    vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(0));
+//    vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(1));
+//    vector<vray> vrayNewPair;
+//    for (int i=1; i<listSegmentsCopy.size(); i++){
+//        segment seg = listSegmentsCopy.at(i);
+//        vrayNewPair.clear();
+//        vrayNewPair.push_back(seg.generateVray(seg).at(0));
+//        vrayNewPair.push_back(seg.generateVray(seg).at(1));
+//        vrayForMerge = mergeVrays(vrayForMerge, vrayNewPair);
+//    }
+//
+//    vrayForMerge.push_back(vray(360.0, ofVec2f(1.0f, 0.0f), minValueR, infinity));
+//
+//    cout << "\n after merge vrays: ";
+//    printAllVrays(vrayForMerge);
+
+    
+    // TODO ignore the point 0.0f,0.0f , might make some cases bad
+    
+
+    cout << "\n ";
+    
+    
+//    // POINTS TO DRAW THE POLYGON
+//    // ---- points to draw polygon
+//    vector<ofVec2f> pointsPolygon;
+//    pointsPolygon = calculatePointsForTriangles(vrayForMerge, pointQ);
+//    ofAppNew.pointsForTriangle = pointsPolygon;
+
     
     // TODO take care of when angle is 180, the trianlge looks like a line
     
 
 	ofSetupOpenGL(1024,768, OF_WINDOW);			// <-------- setup the GL context
-
+    cout << "\n sajdhfgiuashgfuywasgifuhasdgkjhsadfgkjhdsgkjsfdhg";
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:

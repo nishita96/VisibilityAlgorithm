@@ -23,6 +23,15 @@ class ofApp : public ofBaseApp{
     
 //        vector<ofVec2f> pointsToDraw;
         ofVec2f q;
+        vector<segment> setOfSegmentsToDraw;
         vector<segment> setOfSegments;
+        vector<segment> setOfSegmentsOriginal;
+        vector<segment> listSegmentsCopy;
         vector<ofVec2f> pointsForTriangle;
+        vector<vray> vrayForMerge;
+        vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2);
+        vector<ofVec2f> calculatePointsForTriangles(vector<vray> vrayForMerge, ofVec2f pointQ);
+        void doEverything();
+        void mergeSequantially(int minValueR);
+        void drawPolygon();
 };
