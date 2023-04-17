@@ -166,8 +166,8 @@ void ofApp::mouseMoved(int x, int y){
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
 //    cout << "test mouse drag " << x << " , " << y << endl;
-    q.set(x, y);
-    doEverything();
+    // q.set(x, y);
+    // doEverything();
 }
 
 //--------------------------------------------------------------
