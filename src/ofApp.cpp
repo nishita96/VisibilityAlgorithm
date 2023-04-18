@@ -1,5 +1,6 @@
 #include "ofApp.h"
 #include "versions.hpp"
+#include "cpu_version.hpp"
 
 float infinity = 9999.0f;
 //--------------------------------------------------------------
@@ -212,7 +213,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void ofApp::doEverything(){
 
-    Versions* cpu;
+    Versions* cpu = new CPU();
     setOfSegments = setOfSegmentsOriginal;
     vrayForMerge = cpu->process_segments(setOfSegments, q);
 

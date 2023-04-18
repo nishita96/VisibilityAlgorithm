@@ -1,5 +1,6 @@
 
 #include "segment.hpp"
+#include<iostream>
 
 class Versions {
     
@@ -12,6 +13,7 @@ class Versions {
 
     virtual vector<vray> merge(vector<segment> listSegmentsCopy) {
         vector<vray> re;
+        cout<<"Fatal. Shouldn't reach here";
         return re; 
 
     }
