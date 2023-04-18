@@ -2,7 +2,7 @@
 #include "versions.hpp"
 #include "cpu_version.hpp"
 
-float infinity = 9999.0f;
+// float infinity = 9999.0f;
 //--------------------------------------------------------------
 void ofApp::setup(){
     // Set the background color to white

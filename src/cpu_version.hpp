@@ -146,7 +146,7 @@ class CPU: public Versions {
         return vrayForMerge;
     }
 
-    vector<segments> preprocess(vector<segment>& segments, ofVec2f& q) {
+    vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
         for(int i=0; i< segments.size(); i++){ 
             segments[i].translateToQ(q);
         }
@@ -159,8 +159,8 @@ class CPU: public Versions {
                 ++it;
             }
         }
-        vector<segments> fresh_segments = check_intersections(segments);   
+        vector<segment> fresh_segments = check_intersections(segments);   
         return fresh_segments;
     }
-}
+};
 
