@@ -1,7 +1,7 @@
 
 #include "versions.hpp"
 
-class CPU: Versions {
+class CPU: public Versions {
 
 
     vector<segment> check_intersections(vector<segment>& segments) {
