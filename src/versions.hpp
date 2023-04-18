@@ -27,7 +27,7 @@ class VisibilityBase {
         return end - start;
     }
 
-    virtual vector<vray> process_segments(vector<segment> segments, ofVec2f& q) {
+    vector<vray> process_segments(vector<segment> segments, ofVec2f& q) {
         start = 0;
         std::cout<<"Starting Process"<<std::endl;
         vector<segment> updated_segments = this->preprocess(segments, q);
