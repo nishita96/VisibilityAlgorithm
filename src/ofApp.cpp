@@ -212,7 +212,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void ofApp::doEverything(){
 
-    VisibilityBase* cpu = new CPU();
+    CPU* cpu = new CPU();
     setOfSegments = setOfSegmentsOriginal;
     vrayForMerge = cpu->process_segments(setOfSegments, q);
 
