@@ -165,6 +165,7 @@ class CPU: public VisibilityBase {
         return fresh_segments;
     }
 
+    public:
     vector<vray> process_segments(vector<segment> segments, ofVec2f& q) {
         // start = 0;
         std::cout<<"Starting Process"<<std::endl;
