@@ -2,18 +2,21 @@
 #include "segment.hpp"
 #include<iostream>
 
-class Versions {
+class VisibilityBase {
     
     int start;
     int end;
 
     virtual vector<segment> preprocess(vector<segment>& segments, ofVec2f q) {
         //fatal
+        vector<segment> re;
+        cout<<"Fatal preprocess. Shouldn't reach here";
+        return re; 
     }
 
     virtual vector<vray> merge(vector<segment> listSegmentsCopy) {
         vector<vray> re;
-        cout<<"Fatal. Shouldn't reach here";
+        cout<<"Fatal merge. Shouldn't reach here";
         return re; 
 
     }
