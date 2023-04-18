@@ -10,7 +10,9 @@ class Versions {
         //fatal
     }
 
-    virtual void merge(vector<segment> listSegmentsCopy) {
+    virtual vector<vray> merge(vector<segment> listSegmentsCopy) {
+        vector<vray> re;
+        return re; 
 
     }
 
