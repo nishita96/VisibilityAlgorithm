@@ -1,7 +1,0 @@
-add_executable(app main.cpp)
-add_executable(app ofApp.cpp)
-add_executable(app ofApp.hpp)
-add_executable(app segment.cpp)
-add_executable(app segment.hpp)
-add_executable(app vray.hpp)
-add_executable(app vray.cpp)
