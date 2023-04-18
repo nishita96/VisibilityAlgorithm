@@ -147,10 +147,11 @@ class CPU: public VisibilityBase {
     }
 
     vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
+        std::cout<<"Preprocess: step 1"<<std::endl;
         for(int i=0; i< segments.size(); i++){ 
             segments[i].translateToQ(q);
         }
-
+        std::cout<<"Preprocess: step 2"<<std::endl;
         vector<segment>::iterator it = segments.begin();
         while(it != segments.end()) {
             if(it->collinearWithQ() == 0.0f){
@@ -159,6 +160,7 @@ class CPU: public VisibilityBase {
                 ++it;
             }
         }
+        std::cout<<"Preprocess: step 3"<<std::endl;
         vector<segment> fresh_segments = check_intersections(segments);   
         return fresh_segments;
     }
