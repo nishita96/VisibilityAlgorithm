@@ -2,7 +2,7 @@
 #include "versions.hpp"
 
 float infinity = 9999.0f;
-class CPU: public Versions {
+class CPU: public VisibilityBase {
 
 
     vector<segment> check_intersections(vector<segment>& segments) {
