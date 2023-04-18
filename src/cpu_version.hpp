@@ -1,6 +1,7 @@
 
 #include "versions.hpp"
 
+float infinity = 9999.0f;
 class CPU: public Versions {
 
 
@@ -117,6 +118,7 @@ class CPU: public Versions {
     }
 
     vector<vray> merge(vector<segment>& listSegmentsCopy) {
+        int minValueR = 9999.0f;
         vector<vray> vrayForMerge;
         vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(0));
         vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(1));
@@ -144,7 +146,7 @@ class CPU: public Versions {
         return vrayForMerge;
     }
 
-    void preprocess(vector<segment>& segments, ofVec2f& q) {
+    vector<segments> preprocess(vector<segment>& segments, ofVec2f& q) {
         for(int i=0; i< segments.size(); i++){ 
             segments[i].translateToQ(q);
         }
@@ -158,6 +160,7 @@ class CPU: public Versions {
             }
         }
         vector<segments> fresh_segments = check_intersections(segments);   
+        return fresh_segments;
     }
 }
 
