@@ -192,9 +192,12 @@ vector<ofVec2f> calculatePointsForTriangles(vector<vray> vrayForMerge, ofVec2f p
 }
 
 int main( ){
-
+    
 
     
+
+
+
     // do all processing
     
     ofApp ofAppNew;

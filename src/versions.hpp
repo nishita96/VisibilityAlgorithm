@@ -6,11 +6,11 @@ class Versions {
     int start;
     int end;
 
-    virtual void preprocess(vector<segment>& segments, ofVec2f& q) {
+    virtual void preprocess(vector<segment>& segments, ofVec2f q) {
         //fatal
     }
 
-    virtual void merge(vector<segment>& listSegmentsCopy) {
+    virtual void merge(vector<segment> listSegmentsCopy) {
 
     }
 
@@ -20,9 +20,9 @@ class Versions {
         return end - start;
     }
 
-    vector<vray> start() {
+    vector<vray> process_segments(vector<segment> segments, ofVec2f& q) {
         start = 0;
-        preprocess(vector<segment>& segments, ofVec2f& q);
+        preprocess(segments, q);
         vector<vray> merged_vrays = merge(segments);
         end = 0;
         return merged_vrays;

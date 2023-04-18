@@ -166,8 +166,8 @@ void ofApp::mouseMoved(int x, int y){
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
 //    cout << "test mouse drag " << x << " , " << y << endl;
-    // q.set(x, y);
-    // doEverything();
+    q.set(x, y);
+    doEverything();
 }
 
 //--------------------------------------------------------------
@@ -209,57 +209,62 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 
 void ofApp::doEverything(){
+
+    Version cpu;
     setOfSegments = setOfSegmentsOriginal;
-    
-    // PREPROCESS
-    // ---- translate all segments to q (q becomes origin)
-    for(int i=0; i< setOfSegments.size(); i++){
-        setOfSegments.at(i).translateToQ(q);
-    }
-//    cout << "\n size after transalation to Q " << listSegments.size() ;
-    
-    // ---- removing points collinear (checking - if area of triangle Q p0 p1 = 0 then they are collinear)
-    for (vector<segment>::iterator it = setOfSegments.begin(); it != setOfSegments.end();){
-        if(it->collinearWithQ() == 0.0f){
-            setOfSegments.erase(it); // automatically iterates to next item after erasing
-        }
-        else{
-            ++it;
-        }
-    }
-//    cout << "\n size after removing collinear segments " << listSegments.size() ;
-    
-    // ---- divde segment into 2 is cuts xaxis properly (slope != 0)
-//    vector<segment>::iterator it = listSegments.begin(); // TODO has some issue, removes the wrong segment
-//    vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
-    listSegmentsCopy.clear();
-    bool splitsAtX = false;
-    for (auto seg: setOfSegments){
-        if(seg.possibleIntersectionTestXAxis()){
-            ofVec2f splitPoint = seg.splitSegmentInto2();
-            if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
-                // TODO check if you need to check which has smaller angle
-                splitsAtX = true;
-                listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
-                listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
-            }
-            else{
-                listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-            }
-        }
-        else{
-            listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-        }
-    }
-//    cout << "\n size after spliting xaxis segments(copy) " << listSegmentsCopy.size() << "\n" ;
+    vrayForMerge = cpu.process_segments(setOfSegments, q);
+
     
     
+//     // PREPROCESS
+//     // ---- translate all segments to q (q becomes origin)
+//     for(int i=0; i< setOfSegments.size(); i++){
+//         setOfSegments.at(i).translateToQ(q);
+//     }
+// //    cout << "\n size after transalation to Q " << listSegments.size() ;
     
-    // MAKE THE V RAYS // TODO like the pseudocode, we only need minValueR here so creating vrays is not needed
-    // to handle the edge case where more than 1 line cuts at xaxis
-    int minValueR = 9999.0f;
+//     // ---- removing points collinear (checking - if area of triangle Q p0 p1 = 0 then they are collinear)
+//     for (vector<segment>::iterator it = setOfSegments.begin(); it != setOfSegments.end();){
+//         if(it->collinearWithQ() == 0.0f){
+//             setOfSegments.erase(it); // automatically iterates to next item after erasing
+//         }
+//         else{
+//             ++it;
+//         }
+//     }
+// //    cout << "\n size after removing collinear segments " << listSegments.size() ;
     
-    mergeSequantially(minValueR);
+//     // ---- divde segment into 2 is cuts xaxis properly (slope != 0)
+// //    vector<segment>::iterator it = listSegments.begin(); // TODO has some issue, removes the wrong segment
+// //    vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
+//     listSegmentsCopy.clear();
+//     bool splitsAtX = false;
+//     for (auto seg: setOfSegments){
+//         if(seg.possibleIntersectionTestXAxis()){
+//             ofVec2f splitPoint = seg.splitSegmentInto2();
+//             if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
+//                 // TODO check if you need to check which has smaller angle
+//                 splitsAtX = true;
+//                 listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
+//                 listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
+//             }
+//             else{
+//                 listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
+//             }
+//         }
+//         else{
+//             listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
+//         }
+//     }
+// //    cout << "\n size after spliting xaxis segments(copy) " << listSegmentsCopy.size() << "\n" ;
+    
+    
+    
+//     // MAKE THE V RAYS // TODO like the pseudocode, we only need minValueR here so creating vrays is not needed
+//     // to handle the edge case where more than 1 line cuts at xaxis
+//     int minValueR = 9999.0f;
+    
+//     mergeSequantially(minValueR);
     
     drawPolygon();
 
