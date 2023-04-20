@@ -9,13 +9,19 @@ class ofVec2f {
 public:
     float x;
     float y;
+    
+    ofVec2f(float _x, float _y) {
+        x = _x;
+        y = _y;
+    }
+
     float angle(ofVec2f v1) {
         return 0;
     }
     float length() {
         return 0;
     }
-}
+};
 
 
 using namespace std;
