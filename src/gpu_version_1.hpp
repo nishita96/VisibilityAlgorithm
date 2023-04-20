@@ -147,7 +147,7 @@ class GPU_V1 {
         return vrayForMerge;
     }
 
-    __global__ void preprocess_in_parallel(float* input, int num_input, void* q, float* output, int& num_output) {
+    __global__ void preprocess_in_parallel(float* input, int num_input, ofVec2f* q, float* output, int& num_output) {
 
         
         std::cout<<"Hello\n";
@@ -159,7 +159,7 @@ class GPU_V1 {
             
         float *d_segments = NULL;
         cudaMalloc((void **) &d_segments, segments.size() * sizeof(segment));
-        float *d_q = NULL;
+        ofVec2f *d_q = NULL;
         cudaMalloc((void **) &d_q, sizeof(ofVec2f));
         void *d_vrays = NULL;
         cudaMalloc((void **) &d_vrays, 100 * sizeof(vray));
@@ -170,7 +170,7 @@ class GPU_V1 {
             fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-        err = cudaMemcpy(d_q, (float*)q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
+        err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
         if (err != cudaSuccess)
         {
             fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
@@ -202,7 +202,7 @@ class GPU_V1 {
     virtual vector<vray> process_segments(vector<segment> segments, ofVec2f& q) {
         // start = 0;
         std::cout<<"Starting Process"<<std::endl;
-        vector<segment> updated_segments = this->preprocess(segments, q);
+        vector<vray> updated_segments = this->preprocess(segments, q);
         std::cout<<"Preprocess complete"<<std::endl;
         vector<vray> merged_vrays;
         // vector<vray> merged_vrays = this->merge(updated_segments);
