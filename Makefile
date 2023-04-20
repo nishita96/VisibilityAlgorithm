@@ -1,3 +1,2 @@
-
 all: 
-nvcc -o app src/*
+	nvcc -o app src/*
