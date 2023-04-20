@@ -1,7 +1,9 @@
 
 // #include "versions.hpp"
 #include <cuda_runtime.h>
+#include <vector>
 
+using namespace std;
 #define BLOCK_SIZE 512 //@@ You can change this
 
 class GPU_V1 {
