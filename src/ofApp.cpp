@@ -233,13 +233,13 @@ void ofApp::doEverything(){
 //    vector<segment>::iterator it = listSegments.begin(); // TODO has some issue, removes the wrong segment
 //    vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
     listSegmentsCopy.clear();
-    bool splitsAtX = false;
+//    bool splitsAtX = false;
     for (auto seg: setOfSegments){
         if(seg.possibleIntersectionTestXAxis()){
             ofVec2f splitPoint = seg.splitSegmentInto2();
             if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
                 // TODO check if you need to check which has smaller angle
-                splitsAtX = true;
+//                splitsAtX = true;
                 listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
                 listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
             }
