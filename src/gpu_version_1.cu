@@ -3,6 +3,7 @@
 #include <cuda_runtime.h>
 #include <vector>
 #include <stdio.h>
+#include <iostream>
 // #include "ofMain.h"
 
 class ofVec2f {
