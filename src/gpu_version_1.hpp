@@ -1,5 +1,5 @@
 
-#include "versions.hpp"
+// #include "versions.hpp"
 #include <cuda_runtime.h>
 
 #define BLOCK_SIZE 512 //@@ You can change this
@@ -159,7 +159,7 @@ class GPU_V1 {
             
         float *d_segments = NULL;
         cudaMalloc((void **) &d_segments, segments.size() * sizeof(segment));
-        void *d_q = NULL;
+        float *d_q = NULL;
         cudaMalloc((void **) &d_q, sizeof(ofVec2f));
         void *d_vrays = NULL;
         cudaMalloc((void **) &d_vrays, 100 * sizeof(vray));
@@ -170,50 +170,32 @@ class GPU_V1 {
             fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-        err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
+        err = cudaMemcpy(d_q, (float*)q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
         if (err != cudaSuccess)
         {
             fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-        int threadsPerBlock = 100;
-        int blocksPerGrid = 1;
-        float *d_vray_count = NULL;
-        cudaMalloc((void **) &d_vray_count,sizeof(float));
+        // int threadsPerBlock = 100;
+        // int blocksPerGrid = 1;
+        // float *d_vray_count = NULL;
+        // cudaMalloc((void **) &d_vray_count,sizeof(float));
 
-        preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments, segments.size(), d_q, d_vrays, d_vray_count);
-        cudaDeviceSynchronize();
-        err = cudaGetLastError();
+        // preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments, segments.size(), d_q, d_vrays, d_vray_count);
+        // cudaDeviceSynchronize();
+        // err = cudaGetLastError();
 
-        if (err != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
-            exit(EXIT_FAILURE);
-        }
-        float vray_count = 0;
-        err = cudaMemcpy(vray_count, d_vray_count, size(float), cudaMemcpyDeviceToHost);
-        vray preprocessed_vrays[100];
-        err = cudaMemcpy(preprocessed_vrays, d_vrays, size(vray) * vray_count, cudaMemcpyDeviceToHost);
+        // if (err != cudaSuccess)
+        // {
+        //     fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
+        //     exit(EXIT_FAILURE);
+        // }
+        // float vray_count = 0;
+        // err = cudaMemcpy(vray_count, d_vray_count, size(float), cudaMemcpyDeviceToHost);
+        // vray preprocessed_vrays[100];
+        // err = cudaMemcpy(preprocessed_vrays, d_vrays, size(vray) * vray_count, cudaMemcpyDeviceToHost);
                 
-        vector<segment>
-
-        
-        std::cout<<"Preprocess: step 1"<<std::endl;
-        for(int i=0; i< segments.size(); i++){ 
-            segments[i].translateToQ(q);
-        }
-        std::cout<<"Preprocess: step 2"<<std::endl;
-        vector<segment>::iterator it = segments.begin();
-        while(it != segments.end()) {
-            if(it->collinearWithQ() == 0.0f){
-                segments.erase(it); // automatically iterates to next item after erasing
-            } else {
-                ++it;
-            }
-        }
-        std::cout<<"Preprocess: step 3"<<std::endl;
-        vector<segment> fresh_segments = check_intersections(segments);   
-        return fresh_segments;
+        vector<segment> res;
     }
 
     public:
