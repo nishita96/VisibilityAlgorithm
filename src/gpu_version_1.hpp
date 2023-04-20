@@ -170,8 +170,8 @@ class GPU_V1 {
             fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-        d_q.x = q.x;
-        d_q.y = q.y;
+        d_q->x = q.x;
+        d_q->y = q.y;
         // err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
         // if (err != cudaSuccess)
         // {
@@ -197,7 +197,8 @@ class GPU_V1 {
         // vray preprocessed_vrays[100];
         // err = cudaMemcpy(preprocessed_vrays, d_vrays, size(vray) * vray_count, cudaMemcpyDeviceToHost);
                 
-        vector<segment> res;
+        vector<vray> res;
+        return res;
     }
 
     public:
