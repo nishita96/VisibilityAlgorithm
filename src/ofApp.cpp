@@ -1,5 +1,6 @@
 #include "ofApp.h"
 #include "cpu_version.hpp"
+#include "gpu_version_1.hpp"
 
 // float infinity = 9999.0f;
 //--------------------------------------------------------------
