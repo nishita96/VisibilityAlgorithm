@@ -2,7 +2,7 @@
 // #include "versions.hpp"
 #include <cuda_runtime.h>
 #include <vector>
-#include <stdio>
+#include <stdio.h>
 
 
 using namespace std;
