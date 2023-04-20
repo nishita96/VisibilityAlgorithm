@@ -3,9 +3,9 @@
 #include <cuda_runtime.h>
 
 #define BLOCK_SIZE 512 //@@ You can change this
-float infinity = 9999.0f;
-class GPU_V1 {
 
+class GPU_V1 {
+    float infinity = 9999.0f;
     vector<segment> check_intersections(vector<segment>& segments) {
         vector<segment> listSegmentsCopy;
         for (auto seg: segments){
