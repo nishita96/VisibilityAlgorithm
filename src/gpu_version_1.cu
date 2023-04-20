@@ -3,6 +3,7 @@
 #include <cuda_runtime.h>
 #include <vector>
 #include <stdio.h>
+#include "ofMain.h"
 
 
 using namespace std;
