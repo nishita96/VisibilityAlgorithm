@@ -170,12 +170,14 @@ class GPU_V1 {
             fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-        err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
-        if (err != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
-            exit(EXIT_FAILURE);
-        }
+        d_q.x = q.x;
+        d_q.y = q.y;
+        // err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
+        // if (err != cudaSuccess)
+        // {
+        //     fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
+        //     exit(EXIT_FAILURE);
+        // }
         // int threadsPerBlock = 100;
         // int blocksPerGrid = 1;
         // float *d_vray_count = NULL;
