@@ -160,7 +160,7 @@ class GPU_V1 {
         float *d_segments = NULL;
         cudaMalloc((void **) &d_segments, segments.size() * sizeof(segment));
         ofVec2f *d_q = NULL;
-        cudaMalloc((void **) &d_q, sizeof(ofVec2f));
+        cudaMalloc((ofVec2f **) &d_q, sizeof(ofVec2f));
         void *d_vrays = NULL;
         cudaMalloc((void **) &d_vrays, 100 * sizeof(vray));
         cudaError_t err = cudaSuccess;
