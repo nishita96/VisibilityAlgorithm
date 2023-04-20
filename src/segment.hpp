@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <utility>
 #include "ofMain.h"
-#include "vray.hpp"
+#include "vray.h"
 
 
 using namespace std;
