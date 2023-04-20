@@ -212,9 +212,13 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void ofApp::doEverything(){
 
-    CPU* cpu = new CPU();
+    // CPU* cpu = new CPU();
+    // setOfSegments = setOfSegmentsOriginal;
+    // vrayForMerge = cpu->process_segments(setOfSegments, q);
+
+    GPU_V1* gpu = new GPU_V1();
     setOfSegments = setOfSegmentsOriginal;
-    vrayForMerge = cpu->process_segments(setOfSegments, q);
+    vrayForMerge = gpu->process_segments(setOfSegments, q);
 
     
     
