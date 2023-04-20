@@ -121,6 +121,8 @@ class GPU_V1 {
     }
 
     vector<vray> merge(vector<segment>& listSegmentsCopy) {
+        
+        
         int minValueR = 9999.0f;
         vector<vray> vrayForMerge;
         vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(0));
@@ -157,7 +159,7 @@ class GPU_V1 {
 
     }
 
-    vector<vray> preprocess(vector<segment>& segments, ofVec2f& q) {
+    vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
             
         float *d_segments = NULL;
         cudaMalloc((void **) &d_segments, segments.size() * sizeof(segment));
@@ -199,7 +201,7 @@ class GPU_V1 {
         // vray preprocessed_vrays[100];
         // err = cudaMemcpy(preprocessed_vrays, d_vrays, size(vray) * vray_count, cudaMemcpyDeviceToHost);
                 
-        vector<vray> res;
+        vector<segment> res;
         return res;
     }
 
@@ -207,11 +209,11 @@ class GPU_V1 {
     virtual vector<vray> process_segments(vector<segment> segments, ofVec2f& q) {
         // start = 0;
         std::cout<<"Starting Process"<<std::endl;
-        vector<vray> updated_segments = this->preprocess(segments, q);
+        vector<segment> updated_segments = this->preprocess(segments, q);
         std::cout<<"Preprocess complete"<<std::endl;
         vector<vray> merged_vrays;
-        // vector<vray> merged_vrays = this->merge(updated_segments);
-        // std::cout<<"Ending Process"<<std::endl;
+        vector<vray> merged_vrays = this->merge(updated_segments);
+        std::cout<<"Ending Process"<<std::endl;
         // end = 0;
         return merged_vrays;
     }
