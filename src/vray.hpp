@@ -7,15 +7,17 @@
 
 #pragma once
 #include <stdio.h>
-#include "ofMain.h"
+// #include "ofMain.h"
 
 class vray {
     public:
-        vray(float _theta, ofVec2f _unitVec, float _r, float _l) :
-            theta(_theta), unitVec(_unitVec.x, _unitVec.y), r(_r), l(_l) {}
+        // vray(float _theta, ofVec2f _unitVec, float _r, float _l) :
+        //     theta(_theta), unitVec(_unitVec.x, _unitVec.y), r(_r), l(_l) {}
+        vray(float _theta, float _r, float _l) :
+            theta(_theta), r(_r), l(_l) {}
         
         float theta;
-        ofVec2f unitVec;
+        // ofVec2f unitVec;
         float r;
         float l;
     
