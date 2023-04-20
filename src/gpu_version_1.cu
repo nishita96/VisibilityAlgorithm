@@ -3,7 +3,19 @@
 #include <cuda_runtime.h>
 #include <vector>
 #include <stdio.h>
-#include "ofMain.h"
+// #include "ofMain.h"
+
+class ofVec2f {
+public:
+    float x;
+    float y;
+    float angle(ofVec2f v1) {
+        return 0;
+    }
+    float length() {
+        return 0;
+    }
+}
 
 
 using namespace std;
