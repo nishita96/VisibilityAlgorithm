@@ -31,7 +31,8 @@ public:
     }
 
     ofVec2f getNormalized() {
-        return this;
+        ofVec2f new_vec(x, y);
+        return new_vec;
     }
 
 
