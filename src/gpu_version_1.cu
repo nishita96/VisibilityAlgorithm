@@ -6,6 +6,8 @@
 #include <iostream>
 // #include "ofMain.h"
 
+#define PI 3.14
+
 class ofVec2f {
 public:
     float x;
@@ -16,12 +18,23 @@ public:
         y = _y;
     }
 
+    void set(float _x, float _y) {
+        x = _x;
+        y = _y;
+    }
+
     float angle(ofVec2f v1) {
         return 0;
     }
     float length() {
         return 0;
     }
+
+    ofVec2f getNormalized() {
+        return this;
+    }
+
+
 };
 
 
@@ -174,12 +187,6 @@ vector<vray> segment::generateVray(segment seg){
     
     return bothVray;
 }
-
-
-
-
-
-
 
 
 class GPU_V1 {
@@ -387,7 +394,6 @@ class GPU_V1 {
         std::cout<<"Starting Process"<<std::endl;
         vector<segment> updated_segments = this->preprocess(segments, q);
         std::cout<<"Preprocess complete"<<std::endl;
-        vector<vray> merged_vrays;
         vector<vray> merged_vrays = this->merge(updated_segments);
         std::cout<<"Ending Process"<<std::endl;
         // end = 0;
