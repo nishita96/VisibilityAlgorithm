@@ -71,13 +71,13 @@ public:
     ofVec2f p1;
     bool isValid = false;
     
-    int signum(float f);
-    void translateToQ(ofVec2f q);
-    bool possibleIntersectionTestXAxis();
-    ofVec2f splitSegmentInto2();
-    ofVec2f intersectionWithGivenSegment(segment other);
-    bool collinearWithQ(); // q is always 0 after translation
-    vector<vray> generateVray(segment seg);
+    __global__ int signum(float f);
+    __global__ void translateToQ(ofVec2f q);
+    __global__ bool possibleIntersectionTestXAxis();
+    __global__ ofVec2f splitSegmentInto2();
+    __global__ ofVec2f intersectionWithGivenSegment(segment other);
+    __global__ bool collinearWithQ(); // q is always 0 after translation
+    __global__ vector<vray> generateVray(segment seg);
 };
 
 
