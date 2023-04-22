@@ -423,6 +423,7 @@ class GPU_V1 {
         std::cout<<"Starting Process"<<std::endl;
         vector<segment> updated_segments = this->preprocess(segments, q);
         std::cout<<"Preprocess complete"<<std::endl;
+        vector<vray> merged_vrays;
         // vector<vray> merged_vrays = this->merge(updated_segments);
         // std::cout<<"Ending Process"<<std::endl;
         // end = 0;
