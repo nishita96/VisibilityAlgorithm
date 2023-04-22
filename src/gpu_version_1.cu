@@ -199,11 +199,11 @@ vector<vray> segment::generateVray(segment seg){
     return bothVray;
 }
 
-__global__ void preprocess_in_parallel(segment* input, int size, ofVec2f *q, segment* output) {
+__global__ void preprocess_in_parallel(segment* input, int size, ofVec2f q, segment* output) {
  
     int tid = threadIdx.x;
     if(tid < size) {
-        input[tid].translateToQ(*q);
+        input[tid].translateToQ(q);
         printf("Output: input[tid]: %f\n", input[tid].p1.x);
         // if(input[tid].collinearWithQ() != 0.0f){
         //     // input[tid].erase(it);
@@ -399,7 +399,7 @@ class GPU_V1 {
         // cudaMalloc(&output_num, sizeof(int));
         // output_num = 0;
 
-        ofVec2f *d_q;
+        ofVec2f d_q;
         cudaMalloc(&d_q, sizeof(ofVec2f));
         d_q->x = q.x;
         d_q->y = q.y;
