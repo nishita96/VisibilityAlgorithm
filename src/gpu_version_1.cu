@@ -200,10 +200,11 @@ vector<vray> segment::generateVray(segment seg){
     return bothVray;
 }
 
-__global__ void preprocess_in_parallel(segment* input, int size, ofVec2f q, segment* output) {
+__global__ void preprocess_in_parallel(segment* input, int size, int x, int y, segment* output) {
  
     int tid = threadIdx.x;
     if(tid < size) {
+        ofVec2f q(x, y);
         printf("sdfs\n");
         // printf("Output: input[tid]: %f\n", input[tid].p1.x);
         // input[tid].translateToQ(q);
@@ -398,36 +399,36 @@ class GPU_V1 {
         segment *d_output_segments;
         cudaMalloc(&d_output_segments, 2 * segments.size() * sizeof(segment));
 
-        ofVec2f *d_q;
-        cudaMalloc((void**)d_q, sizeof(ofVec2f));
-        err = cudaMemcpy(d_q, &q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
-        if (err != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
-            exit(EXIT_FAILURE);
-        }
+        // ofVec2f *d_q;
+        // cudaMalloc((void**)d_q, sizeof(ofVec2f));
+        // err = cudaMemcpy(d_q, &q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
+        // if (err != cudaSuccess)
+        // {
+        //     fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
+        //     exit(EXIT_FAILURE);
+        // }
 
 
         int threadsPerBlock = 100;
         int blocksPerGrid = 1;
-        // preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), *d_q, d_output_segments);
-        // cudaDeviceSynchronize();
-        // err = cudaGetLastError();
-        // if (err != cudaSuccess)
-        // {
-        //     fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
-        //     exit(EXIT_FAILURE);
-        // }
-        // vector<segment> preprocessed_segments;
-        // err = cudaMemcpy(preprocessed_segments.data(), d_output_segments, 2 * segments.size() * sizeof(segment), cudaMemcpyDeviceToHost);
-        // // cudaFree(d_output_segments);
-        // // cudaFree(d_segments);
-        // vector<segment> filtered_segments;
-        // for(auto ps : preprocessed_segments) {
-        //     if(ps.isValid) {
-        //         filtered_segments.push_back(ps);
-        //     }
-        // }
+        preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), q.x, q.y, d_output_segments);
+        cudaDeviceSynchronize();
+        err = cudaGetLastError();
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
+        vector<segment> preprocessed_segments;
+        err = cudaMemcpy(preprocessed_segments.data(), d_output_segments, 2 * segments.size() * sizeof(segment), cudaMemcpyDeviceToHost);
+        // cudaFree(d_output_segments);
+        // cudaFree(d_segments);
+        vector<segment> filtered_segments;
+        for(auto ps : preprocessed_segments) {
+            if(ps.isValid) {
+                filtered_segments.push_back(ps);
+            }
+        }
         vector<segment> filtered_segments;
         return filtered_segments;
 
