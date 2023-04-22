@@ -71,13 +71,13 @@ public:
     ofVec2f p1;
     bool isValid = false;
     
-    int signum(float f);
-    void translateToQ(ofVec2f q);
-    bool possibleIntersectionTestXAxis();
-    ofVec2f splitSegmentInto2();
-    ofVec2f intersectionWithGivenSegment(segment other);
-    bool collinearWithQ(); // q is always 0 after translation
-    vector<vray> generateVray(segment seg);
+    __device__ int signum(float f);
+    __device__ void translateToQ(ofVec2f q);
+    __device__ bool possibleIntersectionTestXAxis();
+    __device__ ofVec2f splitSegmentInto2();
+    __device__ ofVec2f intersectionWithGivenSegment(segment other);
+    __device__ bool collinearWithQ(); // q is always 0 after translation
+    __device__ vector<vray> generateVray(segment seg);
 };
 
 
@@ -200,7 +200,7 @@ __global__ void preprocess_in_parallel(segment* input, int size, ofVec2f *q, seg
  
     int tid = threadIdx.x;
     if(tid < size) {
-        input[tid].translateToQ(*q);
+        input[tid]->translateToQ(*q);
         if(input[tid].collinearWithQ() != 0.0f){
             // input[tid].erase(it);
             if(input[tid].possibleIntersectionTestXAxis()) {
