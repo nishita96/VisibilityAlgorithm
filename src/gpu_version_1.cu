@@ -77,7 +77,7 @@ public:
         p0(e0.x, e0.y), p1(e1.x, e1.y) {}
 
     __device__ segment(ofVec2f e0, ofVec2f e1, int c) :
-    p0(e0.x, e0.y), p1(e1.x, e1.y) {}
+    p0(e0.x, e0.y, 0), p1(e1.x, e1.y, 0) {}
 
     ofVec2f p0;
     ofVec2f p1;
