@@ -81,7 +81,7 @@ public:
     bool isValid = false;
     
      int signum(float f);
-      void translateToQ(ofVec2f pointQ){
+    __device__ void translateToQ(ofVec2f pointQ){
         printf("inside translateToQ\n");
         p0.set(p0.x - pointQ.x, -(p0.y - pointQ.y)); // because display needs oroginal coordinates but geomterically the y direction is opposite
         p1.set(p1.x - pointQ.x, -(p1.y - pointQ.y));
