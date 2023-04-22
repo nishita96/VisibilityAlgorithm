@@ -430,7 +430,9 @@ class GPU_V1 {
         // cudaFree(d_output_segments);
         // cudaFree(d_segments);
         vector<segment> filtered_segments;
+        printf("preprocessed_segments: %d\n",preprocessed_segments.size());
         for(auto ps : preprocessed_segments) {
+            
             if(ps.isValid) {
                 filtered_segments.push_back(ps);
             }
