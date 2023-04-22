@@ -76,6 +76,9 @@ public:
      segment(ofVec2f e0, ofVec2f e1) :
         p0(e0.x, e0.y), p1(e1.x, e1.y) {}
 
+    __device__ segment(ofVec2f e0, ofVec2f e1, int c) :
+    p0(e0.x, e0.y), p1(e1.x, e1.y) {}
+
     ofVec2f p0;
     ofVec2f p1;
     bool isValid = false;
@@ -86,8 +89,8 @@ public:
         p0.set(p0.x - pointQ.x, -(p0.y - pointQ.y)); // because display needs oroginal coordinates but geomterically the y direction is opposite
         p1.set(p1.x - pointQ.x, -(p1.y - pointQ.y));
     }
-     bool possibleIntersectionTestXAxis();
-     ofVec2f splitSegmentInto2();
+    __device__ bool possibleIntersectionTestXAxis();
+    __device__ ofVec2f splitSegmentInto2();
      ofVec2f intersectionWithGivenSegment(segment other);
      __device__ bool collinearWithQ(); // q is always 0 after translation
      vector<vray> generateVray(segment seg);
@@ -108,7 +111,7 @@ int segment::signum(float f) {
 }
 
 
-bool segment::possibleIntersectionTestXAxis(){
+__device__ bool segment::possibleIntersectionTestXAxis(){
     // TODO: Implement A Method To Find The Intersection Between 2 Axis Aligned Bounding Boxes
     if(p0.x < 0 && p1.x < 0){
         return false;
@@ -123,7 +126,7 @@ bool segment::possibleIntersectionTestXAxis(){
   }
 
 
-  ofVec2f segment::splitSegmentInto2(){
+  __device__ ofVec2f segment::splitSegmentInto2(){
     // TODO: Implement A Fast Method To Find The Edge Intersection Point.
     // Should return the intersection point or null, if no intersection exists.
     //  Care should be taken to make the implementation CORRECT, but SPEED MATTERS.
@@ -215,27 +218,25 @@ __global__ void preprocess_in_parallel(segment* input, int size, int x, int y, s
     if(tid < size) {
         // ofVec2f* q = create_ofvec_obj(x, y);
         ofVec2f q(x, y, 0);
-        printf("sdfs\n");
         printf("Output: input[tid]: %f\n", input[tid].p1.x);
         input[tid].translateToQ(q);
         
         if(input[tid].collinearWithQ() != 0.0f){
-            // input[tid].erase(it);
-            // if(input[tid].possibleIntersectionTestXAxis()) {
-            //     ofVec2f splitPoint = input[tid].splitSegmentInto2();
-            //     if(splitPoint.x != -1.0f){ 
-            //         output[2 * tid] = segment(input[tid].p0, splitPoint);
-            //         output[2 * tid + 1] = segment(input[tid].p1, splitPoint);
-            //         output[2 * tid].isValid = true;
-            //         output[2 * tid + 1].isValid = true;
-            //     } else {
-            //         output[2 * tid] = segment(input[tid].p0, input[tid].p1);
-            //         output[2 * tid].isValid = true;
-            //     }
-            // } else {
-            //     output[2 * tid] = segment(input[tid].p0, input[tid].p1);
-            //     output[2 * tid].isValid = true;
-            // }
+            if(input[tid].possibleIntersectionTestXAxis()) {
+                ofVec2f splitPoint = input[tid].splitSegmentInto2();
+                if(splitPoint.x != -1.0f){ 
+                    output[2 * tid] = segment(input[tid].p0, splitPoint, 0);
+                    output[2 * tid + 1] = segment(input[tid].p1, splitPoint, 0);
+                    output[2 * tid].isValid = true;
+                    output[2 * tid + 1].isValid = true;
+                } else {
+                    output[2 * tid] = segment(input[tid].p0, input[tid].p1, 0);
+                    output[2 * tid].isValid = true;
+                }
+            } else {
+                output[2 * tid] = segment(input[tid].p0, input[tid].p1, 0);
+                output[2 * tid].isValid = true;
+            }
         }
     }
 }
