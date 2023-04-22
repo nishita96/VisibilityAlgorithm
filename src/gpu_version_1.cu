@@ -14,7 +14,7 @@ public:
     float x;
     float y;
     
-    __device__ ofVec2f(float _x, float _y) {
+    __global__ ofVec2f(float _x, float _y) {
         x = _x;
         y = _y;
     }
@@ -36,12 +36,12 @@ public:
         return new_vec;
     }
 
-     ofVec2f operator*(float scale) {
-        ofVec2f vec(1,1);
-        vec.x = this->x * scale;
-        vec.y = this->y * scale;
-        return vec;
-    }
+    //  ofVec2f operator*(float scale) {
+    //     ofVec2f vec(1,1);
+    //     vec.x = this->x * scale;
+    //     vec.y = this->y * scale;
+    //     return vec;
+    // }
 };
 
 
