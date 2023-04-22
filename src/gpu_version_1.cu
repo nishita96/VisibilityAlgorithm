@@ -398,7 +398,7 @@ class GPU_V1 {
         // cudaMalloc((void **) &d_vray_count,sizeof(float));
 
         // preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments, (int)segments.size());
-        preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments);
+        preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments);
         // cudaDeviceSynchronize();
         // err = cudaGetLastError();
 
