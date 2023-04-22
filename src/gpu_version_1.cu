@@ -204,7 +204,8 @@ __global__ void preprocess_in_parallel(segment* input, int size, ofVec2f q, segm
  
     int tid = threadIdx.x;
     if(tid < size) {
-        printf("Output: input[tid]: %f\n", input[tid].p1.x);
+        print("sdfs\n");
+        // printf("Output: input[tid]: %f\n", input[tid].p1.x);
         // input[tid].translateToQ(q);
         
         // if(input[tid].collinearWithQ() != 0.0f){
