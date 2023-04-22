@@ -438,9 +438,9 @@ class GPU_V1 {
         vector<segment> filtered_segments;
         // printf("preprocessed_segments: %d\n",preprocessed_segments.size());
         for(int i=0;i<2*segments.size();i++) {
-            if(preprocessed_segments[i].isValid) {
+            if(d_segments[i].isValid) {
                 printf("preprocessed_segments: \n");
-                filtered_segments.push_back(preprocessed_segments[i]);
+                filtered_segments.push_back(d_segments[i]);
             }
         }
         // vector<segment> filtered_segments;
