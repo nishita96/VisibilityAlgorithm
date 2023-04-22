@@ -397,8 +397,8 @@ class GPU_V1 {
 
         ofVec2f *d_q;
         cudaMalloc(d_q, sizeof(ofVec2f));
-        d_q.x = q.x;
-        d_q.y = q.y;
+        d_q->x = q.x;
+        d_q->y = q.y;
         int threadsPerBlock = 100;
         int blocksPerGrid = 1;
         preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), d_q, d_output_segments);
