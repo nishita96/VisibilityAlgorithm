@@ -443,7 +443,7 @@ int main() {
         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
     };
     ofVec2f pointQ(500,400);
-    GPU_V1 v1 = new GPU_V1();
+    GPU_V1 *v1 = new GPU_V1();
     v1->process_segments(listSegments, pointQ);
     return 0;
 }
