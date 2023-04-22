@@ -195,6 +195,16 @@ vector<vray> segment::generateVray(segment seg){
     return bothVray;
 }
 
+__global__ void preprocess_in_parallel(segment* input, int num_input) {
+
+        
+    std::cout<<"Hello\n";
+    // std::cout<<segment[0]->p0.x<<std::endl;
+
+
+}
+
+
 
 class GPU_V1 {
     float infinity = 9999.0f;
@@ -341,14 +351,14 @@ class GPU_V1 {
         return vrayForMerge;
     }
 
-    __global__ void preprocess_in_parallel(segment* input, int num_input) {
+    // __global__ void preprocess_in_parallel(segment* input, int num_input) {
 
         
-        std::cout<<"Hello\n";
-        // std::cout<<segment[0]->p0.x<<std::endl;
+    //     std::cout<<"Hello\n";
+    //     // std::cout<<segment[0]->p0.x<<std::endl;
 
 
-    }
+    // }
 
     vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
             
