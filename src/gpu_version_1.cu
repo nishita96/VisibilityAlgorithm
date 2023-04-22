@@ -340,13 +340,14 @@ class GPU_V1 {
         return vrayForMerge;
     }
 
-    // __global__ void preprocess_in_parallel(float* input, int num_input, ofVec2f q, float* output, int& num_output) {
+    __global__ void preprocess_in_parallel(segment* input, int num_input) {
 
         
-    //     std::cout<<"Hello\n";
+        std::cout<<"Hello\n";
+        std::cout<<segment[0]->p0.x<<std::endl;
 
 
-    // }
+    }
 
     vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
             
@@ -380,12 +381,12 @@ class GPU_V1 {
         //     fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
         //     exit(EXIT_FAILURE);
         // }
-        // int threadsPerBlock = 100;
-        // int blocksPerGrid = 1;
+        int threadsPerBlock = 100;
+        int blocksPerGrid = 1;
         // float *d_vray_count = NULL;
         // cudaMalloc((void **) &d_vray_count,sizeof(float));
 
-        // preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments, segments.size(), d_q, d_vrays, d_vray_count);
+        preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments, segments.size());
         // cudaDeviceSynchronize();
         // err = cudaGetLastError();
 
