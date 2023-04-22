@@ -350,6 +350,15 @@ class GPU_V1 {
 
     vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
             
+        cudaError_t err = cudaSuccess;
+        segment *d_segments;
+        cudaMalloc(&d_segments, segments.size() * sizeof(segment));
+        err = cudaMemcpy(d_segments, segments.data(), segments.size() * sizeof(segment), cudaMemcpyHostToDevice);
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
         // float *d_segments = NULL;
         // cudaMalloc((void **) &d_segments, segments.size() * sizeof(segment));
         // ofVec2f *d_q = NULL;
