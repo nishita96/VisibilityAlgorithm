@@ -399,7 +399,7 @@ class GPU_V1 {
         cudaMalloc(&d_output_segments, 2 * segments.size() * sizeof(segment));
 
         ofVec2f *d_q;
-        cudaMalloc(&d_q, sizeof(ofVec2f));
+        cudaMalloc((void**)d_q, sizeof(ofVec2f));
         err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
         if (err != cudaSuccess)
         {
