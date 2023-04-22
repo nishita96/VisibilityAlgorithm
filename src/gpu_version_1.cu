@@ -14,12 +14,12 @@ public:
     float x;
     float y;
     
-    __device__ ofVec2f(float _x, float _y) {
+    ofVec2f(float _x, float _y) {
         x = _x;
         y = _y;
     }
 
-    __device__ void set(float _x, float _y) {
+    void set(float _x, float _y) {
         x = _x;
         y = _y;
     }
@@ -31,12 +31,12 @@ public:
         return 0;
     }
 
-    __device__ ofVec2f getNormalized() {
+     ofVec2f getNormalized() {
         ofVec2f new_vec(x, y);
         return new_vec;
     }
 
-    __device__ ofVec2f operator*(float scale) {
+     ofVec2f operator*(float scale) {
         ofVec2f vec(1,1);
         vec.x = this->x * scale;
         vec.y = this->y * scale;
@@ -72,7 +72,7 @@ public:
     bool isValid = false;
     
      int signum(float f);
-     __device__ void translateToQ(ofVec2f pointQ){
+      void translateToQ(ofVec2f pointQ){
         printf("inside translateToQ\n");
         p0.set(p0.x - pointQ.x, -(p0.y - pointQ.y)); // because display needs oroginal coordinates but geomterically the y direction is opposite
         p1.set(p1.x - pointQ.x, -(p1.y - pointQ.y));
@@ -374,15 +374,6 @@ class GPU_V1 {
         vrayForMerge.push_back(vray(360.0, ofVec2f(1.0f, 0.0f), minValueR, infinity));
         return vrayForMerge;
     }
-
-    // __global__ void preprocess_in_parallel(segment* input, int num_input) {
-
-        
-    //     std::cout<<"Hello\n";
-    //     // std::cout<<segment[0]->p0.x<<std::endl;
-
-
-    // }
 
     vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
             
