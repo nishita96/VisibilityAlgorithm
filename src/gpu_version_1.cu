@@ -425,8 +425,9 @@ class GPU_V1 {
             fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-        vector<segment> preprocessed_segments;
-        err = cudaMemcpy(preprocessed_segments.data(), d_output_segments, 2 * segments.size() * sizeof(segment), cudaMemcpyDeviceToHost);
+        segment *preprocessed_segments = new segment[2 * segments.size()];
+        // vector<segment> preprocessed_segments;
+        err = cudaMemcpy(preprocessed_segments, d_output_segments, 2 * segments.size() * sizeof(segment), cudaMemcpyDeviceToHost);
         // cudaFree(d_output_segments);
         // cudaFree(d_segments);
         vector<segment> filtered_segments;
