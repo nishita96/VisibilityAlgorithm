@@ -31,12 +31,12 @@ public:
         return 0;
     }
 
-    ofVec2f getNormalized() {
+    __device__ ofVec2f getNormalized() {
         ofVec2f new_vec(x, y);
         return new_vec;
     }
 
-    ofVec2f operator*(float scale) {
+    __device__ ofVec2f operator*(float scale) {
         ofVec2f vec(1,1);
         vec.x = this->x * scale;
         vec.y = this->y * scale;
