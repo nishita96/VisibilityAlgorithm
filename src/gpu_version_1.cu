@@ -400,7 +400,7 @@ class GPU_V1 {
 
         ofVec2f *d_q;
         cudaMalloc((void**)d_q, sizeof(ofVec2f));
-        err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
+        err = cudaMemcpy(d_q, &q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
         if (err != cudaSuccess)
         {
             fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
