@@ -3,6 +3,7 @@
 #include <cuda_runtime.h>
 #include <vector>
 #include <stdio.h>
+#include "cuda.h"
 #include <iostream>
 // #include "ofMain.h"
 
@@ -344,7 +345,7 @@ class GPU_V1 {
 
         
         std::cout<<"Hello\n";
-        std::cout<<segment[0]->p0.x<<std::endl;
+        // std::cout<<segment[0]->p0.x<<std::endl;
 
 
     }
