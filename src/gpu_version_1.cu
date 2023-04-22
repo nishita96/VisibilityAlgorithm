@@ -431,11 +431,11 @@ class GPU_V1 {
         // cudaFree(d_output_segments);
         // cudaFree(d_segments);
         vector<segment> filtered_segments;
-        printf("preprocessed_segments: %d\n",preprocessed_segments.size());
-        for(auto ps : preprocessed_segments) {
-            
-            if(ps.isValid) {
-                filtered_segments.push_back(ps);
+        // printf("preprocessed_segments: %d\n",preprocessed_segments.size());
+        for(int i=0;i<2*segments.size();i++) {
+            if(preprocessed_segments[i].isValid) {
+                printf("preprocessed_segments: \n");
+                filtered_segments.push_back(preprocessed_segments[i]);
             }
         }
         // vector<segment> filtered_segments;
