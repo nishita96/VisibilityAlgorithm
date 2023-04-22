@@ -434,17 +434,15 @@ class GPU_V1 {
             fprintf(stderr, "Failed to copy d_output_segments kernel (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-        // cudaFree(d_output_segments);
-        // cudaFree(d_segments);
         vector<segment> filtered_segments;
-        // printf("preprocessed_segments: %d\n",preprocessed_segments.size());
         for(int i=0;i<2*segments.size();i++) {
             if(preprocessed_segments[i].isValid) {
                 printf("preprocessed_segments: \n");
                 filtered_segments.push_back(preprocessed_segments[i]);
             }
         }
-        // vector<segment> filtered_segments;
+        // cudaFree(d_output_segments);
+        // cudaFree(d_segments);
         return filtered_segments;
 
     }
