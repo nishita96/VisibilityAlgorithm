@@ -64,38 +64,38 @@ public:
 
 class segment {
 public:
-    __device__ segment(ofVec2f e0, ofVec2f e1) :
+     segment(ofVec2f e0, ofVec2f e1) :
         p0(e0.x, e0.y), p1(e1.x, e1.y) {}
 
     ofVec2f p0;
     ofVec2f p1;
     bool isValid = false;
     
-    __device__ int signum(float f);
-    __device__ void translateToQ(ofVec2f q);
-    __device__ bool possibleIntersectionTestXAxis();
-    __device__ ofVec2f splitSegmentInto2();
-    __device__ ofVec2f intersectionWithGivenSegment(segment other);
-    __device__ bool collinearWithQ(); // q is always 0 after translation
-    __device__ vector<vray> generateVray(segment seg);
+     int signum(float f);
+     void translateToQ(ofVec2f q);
+     bool possibleIntersectionTestXAxis();
+     ofVec2f splitSegmentInto2();
+     ofVec2f intersectionWithGivenSegment(segment other);
+     bool collinearWithQ(); // q is always 0 after translation
+     vector<vray> generateVray(segment seg);
 };
 
 
 
-__device__ void segment::translateToQ(ofVec2f pointQ){
+void segment::translateToQ(ofVec2f pointQ){
     p0.set(p0.x - pointQ.x, -(p0.y - pointQ.y)); // because display needs oroginal coordinates but geomterically the y direction is opposite
     p1.set(p1.x - pointQ.x, -(p1.y - pointQ.y));
 }
 
 
-__device__ int segment::signum(float f) {
+int segment::signum(float f) {
    if (f > 0) return 1;
    if (f < 0) return -1;
    return 0;
 }
 
 
-__device__ bool segment::possibleIntersectionTestXAxis(){
+bool segment::possibleIntersectionTestXAxis(){
     // TODO: Implement A Method To Find The Intersection Between 2 Axis Aligned Bounding Boxes
     if(p0.x < 0 && p1.x < 0){
         return false;
@@ -110,7 +110,7 @@ __device__ bool segment::possibleIntersectionTestXAxis(){
   }
 
 
-  __device__ ofVec2f segment::splitSegmentInto2(){
+  ofVec2f segment::splitSegmentInto2(){
     // TODO: Implement A Fast Method To Find The Edge Intersection Point.
     // Should return the intersection point or null, if no intersection exists.
     //  Care should be taken to make the implementation CORRECT, but SPEED MATTERS.
@@ -138,7 +138,7 @@ __device__ bool segment::possibleIntersectionTestXAxis(){
 }
 
 
-__device__ ofVec2f segment::intersectionWithGivenSegment(segment other){
+ofVec2f segment::intersectionWithGivenSegment(segment other){
     // TODO: Implement A Fast Method To Find The Edge Intersection Point.
     // Should return the intersection point or null, if no intersection exists.
     //  Care should be taken to make the implementation CORRECT, but SPEED MATTERS.
@@ -166,12 +166,12 @@ __device__ ofVec2f segment::intersectionWithGivenSegment(segment other){
 }
 
 
-__device__ bool segment::collinearWithQ(){
+bool segment::collinearWithQ(){
     return abs(p0.x * p1.y - p0.y * p1.x)/2;
 }
 
 
-__device__ vector<vray> segment::generateVray(segment seg){
+vector<vray> segment::generateVray(segment seg){
     vector<vray> bothVray;
     ofVec2f xAxisVec(1.0,0.0);
     float infinity = 9999.0f;
