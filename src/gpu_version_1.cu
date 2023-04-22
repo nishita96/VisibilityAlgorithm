@@ -64,7 +64,7 @@ public:
 
 class segment {
 public:
-    segment(ofVec2f e0, ofVec2f e1) :
+    __device__ segment(ofVec2f e0, ofVec2f e1) :
         p0(e0.x, e0.y), p1(e1.x, e1.y) {}
 
     ofVec2f p0;
