@@ -14,7 +14,7 @@ public:
     float x;
     float y;
     
-    ofVec2f(float _x, float _y) {
+    __device__ ofVec2f(float _x, float _y) {
         x = _x;
         y = _y;
     }
