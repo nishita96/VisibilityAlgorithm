@@ -72,7 +72,10 @@ public:
     bool isValid = false;
     
      int signum(float f);
-     void translateToQ(ofVec2f q);
+     __device__ void translateToQ(ofVec2f pointQ){
+        p0.set(p0.x - pointQ.x, -(p0.y - pointQ.y)); // because display needs oroginal coordinates but geomterically the y direction is opposite
+        p1.set(p1.x - pointQ.x, -(p1.y - pointQ.y));
+    }
      bool possibleIntersectionTestXAxis();
      ofVec2f splitSegmentInto2();
      ofVec2f intersectionWithGivenSegment(segment other);
@@ -82,10 +85,10 @@ public:
 
 
 
-void segment::translateToQ(ofVec2f pointQ){
-    p0.set(p0.x - pointQ.x, -(p0.y - pointQ.y)); // because display needs oroginal coordinates but geomterically the y direction is opposite
-    p1.set(p1.x - pointQ.x, -(p1.y - pointQ.y));
-}
+// void segment::translateToQ(ofVec2f pointQ){
+//     p0.set(p0.x - pointQ.x, -(p0.y - pointQ.y)); // because display needs oroginal coordinates but geomterically the y direction is opposite
+//     p1.set(p1.x - pointQ.x, -(p1.y - pointQ.y));
+// }
 
 
 int segment::signum(float f) {
