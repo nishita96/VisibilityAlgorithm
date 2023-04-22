@@ -211,11 +211,11 @@ __global__ void preprocess_in_parallel(segment* input, int size, ofVec2f q, segm
                     output[2 * tid].isValid = true;
                     output[2 * tid + 1].isValid = true;
                 } else {
-                    output[2 * tid] = segment(input[tid].x, input[tid].y);
+                    output[2 * tid] = segment(input[tid].p0, input[tid].p1);
                     output[2 * tid].isValid = true;
                 }
             } else {
-                output[2 * tid] = segment(input[tid].x, input[tid].y);
+                output[2 * tid] = segment(input[tid].p0, input[tid].p1);
                 output[2 * tid].isValid = true;
             }
         }
@@ -395,8 +395,8 @@ class GPU_V1 {
         // cudaMalloc(&output_num, sizeof(int));
         // output_num = 0;
 
-        ofVec2f d_q;
-        cudaMalloc(&d_q, sizeof(ofVec2f));
+        ofVec2f d_q(1,1);
+        cudaMalloc(d_q, sizeof(ofVec2f));
         d_q.x = q.x;
         d_q.y = q.y;
         int threadsPerBlock = 100;
