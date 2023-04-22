@@ -69,6 +69,7 @@ public:
 
     ofVec2f p0;
     ofVec2f p1;
+    bool isValid = false;
     
     int signum(float f);
     void translateToQ(ofVec2f q);
@@ -195,17 +196,31 @@ vector<vray> segment::generateVray(segment seg){
     return bothVray;
 }
 
-__global__ void preprocess_in_parallel(segment* input) {
-
-        
-    // std::cout<<"Hello\n";
-    // std::cout<<segment[0]->p0.x<<std::endl;
-    printf("Segment: %f\n", input[0].p0.x);
-    // printf("Segment:\n");
-
+__global__ void preprocess_in_parallel(segment* input, int size, ofVec2f q, segment* output) {
+ 
+    int tid = threadIdx.x;
+    if(tid < size) {
+        input[tid].translateToQ(q);
+        if(input[tid].collinearWithQ() != 0.0f){
+            // input[tid].erase(it);
+            if(input[tid].possibleIntersectionTestXAxis()) {
+                ofVec2f splitPoint = seg.splitSegmentInto2();
+                if(splitPoint.x != -1.0f){ 
+                    output[2 * tid] = segment(input[tid].p0, splitPoint);
+                    output[2 * tid + 1] = segment(input[tid].p1, splitPoint);
+                    output[2 * tid].isValid = true;
+                    output[2 * tid + 1].isValid = true;
+                } else {
+                    output[2 * tid] = segment(input[tid].x, input[tid].y);
+                    output[2 * tid].isValid = true;
+                }
+            } else {
+                output[2 * tid] = segment(input[tid].x, input[tid].y);
+                output[2 * tid].isValid = true;
+            }
+        }
+    }
 }
-
-
 
 class GPU_V1 {
     float infinity = 9999.0f;
@@ -372,49 +387,40 @@ class GPU_V1 {
             fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-        // float *d_segments = NULL;
-        // cudaMalloc((void **) &d_segments, segments.size() * sizeof(segment));
-        // ofVec2f *d_q = NULL;
-        // cudaMalloc((ofVec2f **) &d_q, sizeof(ofVec2f));
-        // void *d_vrays = NULL;
-        // cudaMalloc((void **) &d_vrays, 100 * sizeof(vray));
-        // cudaError_t err = cudaSuccess;
-        // err = cudaMemcpy(d_segments, segments.data(), segments.size() * sizeof(segment), cudaMemcpyHostToDevice);
-        // if (err != cudaSuccess)
-        // {
-        //     fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
-        //     exit(EXIT_FAILURE);
-        // }
-        // d_q->x = q.x;
-        // d_q->y = q.y;
-        // err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
-        // if (err != cudaSuccess)
-        // {
-        //     fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
-        //     exit(EXIT_FAILURE);
-        // }
+
+        segment *d_output_segments;
+        cudaMalloc(&d_segments, 2 * segments.size() * sizeof(segment));
+
+        // int* output_num;
+        // cudaMalloc(&output_num, sizeof(int));
+        // output_num = 0;
+
+        ofVec2f d_q;
+        cudaMalloc(&d_q, sizeof(ofVec2f));
+        d_q.x = q.x;
+        d_q.y = q.y;
         int threadsPerBlock = 100;
         int blocksPerGrid = 1;
-        // float *d_vray_count = NULL;
-        // cudaMalloc((void **) &d_vray_count,sizeof(float));
-
-        // preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments, (int)segments.size());
-        preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments);
+        preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), d_q, d_output_segments);
         cudaDeviceSynchronize();
         err = cudaGetLastError();
-
         if (err != cudaSuccess)
         {
             fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-        // float vray_count = 0;
-        // err = cudaMemcpy(vray_count, d_vray_count, size(float), cudaMemcpyDeviceToHost);
-        // vray preprocessed_vrays[100];
-        // err = cudaMemcpy(preprocessed_vrays, d_vrays, size(vray) * vray_count, cudaMemcpyDeviceToHost);
-                
-        vector<segment> res;
-        return res;
+        vector<segment> preprocessed_segments;
+        err = cudaMemcpy(preprocessed_segments.data(), d_output_segments, 2 * segments.size() * sizeof(segment), cudaMemcpyDeviceToHost);
+        // cudaFree(d_output_segments);
+        // cudaFree(d_segments);
+        vector<segment> filtered_segments;
+        for(auto ps : preprocessed_segments) {
+            if(ps.isValid) {
+                filtered_segments.push_back(ps);
+            }
+        }
+        return filtered_segments;
+
     }
 
     public:
