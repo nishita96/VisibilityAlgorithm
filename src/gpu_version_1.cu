@@ -399,13 +399,13 @@ class GPU_V1 {
         // cudaMalloc(&output_num, sizeof(int));
         // output_num = 0;
 
-        ofVec2f d_q(1,1);
+        ofVec2f *d_q;
         cudaMalloc(&d_q, sizeof(ofVec2f));
-        d_q.x = q.x;
-        d_q.y = q.y;
+        d_q->x = q.x;
+        d_q->y = q.y;
         int threadsPerBlock = 100;
         int blocksPerGrid = 1;
-        preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), d_q, d_output_segments);
+        preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), *d_q, d_output_segments);
         cudaDeviceSynchronize();
         err = cudaGetLastError();
         if (err != cudaSuccess)
