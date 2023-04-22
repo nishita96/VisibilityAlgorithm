@@ -204,7 +204,7 @@ __global__ void preprocess_in_parallel(segment* input, int size, ofVec2f q, segm
         if(input[tid].collinearWithQ() != 0.0f){
             // input[tid].erase(it);
             if(input[tid].possibleIntersectionTestXAxis()) {
-                ofVec2f splitPoint = seg.splitSegmentInto2();
+                ofVec2f splitPoint = input[tid].splitSegmentInto2();
                 if(splitPoint.x != -1.0f){ 
                     output[2 * tid] = segment(input[tid].p0, splitPoint);
                     output[2 * tid + 1] = segment(input[tid].p1, splitPoint);
@@ -395,7 +395,7 @@ class GPU_V1 {
         // cudaMalloc(&output_num, sizeof(int));
         // output_num = 0;
 
-        ofVec2f d_q(1,1);
+        ofVec2f *d_q;
         cudaMalloc(d_q, sizeof(ofVec2f));
         d_q.x = q.x;
         d_q.y = q.y;
