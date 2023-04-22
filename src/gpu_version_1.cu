@@ -396,7 +396,7 @@ class GPU_V1 {
         }
 
         segment *d_output_segments;
-        cudaMalloc(&d_segments, 2 * segments.size() * sizeof(segment));
+        cudaMalloc(&d_output_segments, 2 * segments.size() * sizeof(segment));
 
         // int* output_num;
         // cudaMalloc(&output_num, sizeof(int));
