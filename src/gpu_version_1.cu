@@ -340,13 +340,13 @@ class GPU_V1 {
         return vrayForMerge;
     }
 
-    __global__ void preprocess_in_parallel(float* input, int num_input, ofVec2f q, float* output, int& num_output) {
+    // __global__ void preprocess_in_parallel(float* input, int num_input, ofVec2f q, float* output, int& num_output) {
 
         
-        std::cout<<"Hello\n";
+    //     std::cout<<"Hello\n";
 
 
-    }
+    // }
 
     vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
             
