@@ -200,7 +200,7 @@ __global__ void preprocess_in_parallel(segment* input, int size, ofVec2f *q, seg
  
     int tid = threadIdx.x;
     if(tid < size) {
-        input[tid]->translateToQ(*q);
+        input[tid]translateToQ(*q);
         if(input[tid].collinearWithQ() != 0.0f){
             // input[tid].erase(it);
             if(input[tid].possibleIntersectionTestXAxis()) {
