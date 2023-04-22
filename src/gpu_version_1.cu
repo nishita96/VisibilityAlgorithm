@@ -345,21 +345,21 @@ class GPU_V1 {
 
     vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
             
-        float *d_segments = NULL;
-        cudaMalloc((void **) &d_segments, segments.size() * sizeof(segment));
-        ofVec2f *d_q = NULL;
-        cudaMalloc((ofVec2f **) &d_q, sizeof(ofVec2f));
-        void *d_vrays = NULL;
-        cudaMalloc((void **) &d_vrays, 100 * sizeof(vray));
-        cudaError_t err = cudaSuccess;
-        err = cudaMemcpy(d_segments, segments.data(), segments.size() * sizeof(segment), cudaMemcpyHostToDevice);
-        if (err != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
-            exit(EXIT_FAILURE);
-        }
-        d_q->x = q.x;
-        d_q->y = q.y;
+        // float *d_segments = NULL;
+        // cudaMalloc((void **) &d_segments, segments.size() * sizeof(segment));
+        // ofVec2f *d_q = NULL;
+        // cudaMalloc((ofVec2f **) &d_q, sizeof(ofVec2f));
+        // void *d_vrays = NULL;
+        // cudaMalloc((void **) &d_vrays, 100 * sizeof(vray));
+        // cudaError_t err = cudaSuccess;
+        // err = cudaMemcpy(d_segments, segments.data(), segments.size() * sizeof(segment), cudaMemcpyHostToDevice);
+        // if (err != cudaSuccess)
+        // {
+        //     fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
+        //     exit(EXIT_FAILURE);
+        // }
+        // d_q->x = q.x;
+        // d_q->y = q.y;
         // err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
         // if (err != cudaSuccess)
         // {
