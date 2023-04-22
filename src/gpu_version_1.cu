@@ -396,7 +396,7 @@ class GPU_V1 {
         // output_num = 0;
 
         ofVec2f *d_q;
-        cudaMalloc(d_q, sizeof(ofVec2f));
+        cudaMalloc(&d_q, sizeof(ofVec2f));
         d_q->x = q.x;
         d_q->y = q.y;
         int threadsPerBlock = 100;
