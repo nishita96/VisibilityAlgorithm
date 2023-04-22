@@ -195,7 +195,7 @@ vector<vray> segment::generateVray(segment seg){
     return bothVray;
 }
 
-__global__ void preprocess_in_parallel(segment* input, int num_input) {
+__global__ void preprocess_in_parallel(segment* input) {
 
         
     std::cout<<"Hello\n";
@@ -397,7 +397,8 @@ class GPU_V1 {
         // float *d_vray_count = NULL;
         // cudaMalloc((void **) &d_vray_count,sizeof(float));
 
-        preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments, (int)segments.size());
+        // preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments, (int)segments.size());
+        preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments);
         // cudaDeviceSynchronize();
         // err = cudaGetLastError();
 
