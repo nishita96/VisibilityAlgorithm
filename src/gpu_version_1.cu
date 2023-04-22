@@ -44,8 +44,9 @@ public:
     }
 };
 
-__device__ ofVec2f create_ofvec_obj(int x, int y) {
-    return ofVec2f(x, y);
+__device__ ofVec2f* create_ofvec_obj(int x, int y) {
+    ofVec2f* vec = new ofVec2f(x, y);
+    return vec;
 }
 
 using namespace std;
@@ -207,7 +208,7 @@ __global__ void preprocess_in_parallel(segment* input, int size, int x, int y, s
  
     int tid = threadIdx.x;
     if(tid < size) {
-        ofVec2f q = create_ofvec_obj(x, y);
+        ofVec2f* q = create_ofvec_obj(x, y);
         printf("sdfs\n");
         // printf("Output: input[tid]: %f\n", input[tid].p1.x);
         // input[tid].translateToQ(q);
