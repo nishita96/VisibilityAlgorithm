@@ -19,7 +19,7 @@ public:
         y = _y;
     }
 
-    __device__ ofVec2f(float _x, float _y) {
+    ofVec2f(float _x, float _y, int c) {
         x = _x;
         y = _y;
     }
@@ -460,7 +460,7 @@ int main() {
 //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
     };
-    ofVec2f pointQ(500,400);
+    ofVec2f pointQ(500,400, 0);
     GPU_V1 *v1 = new GPU_V1();
     v1->process_segments(listSegments, pointQ);
     return 0;
