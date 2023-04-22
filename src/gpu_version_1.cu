@@ -204,6 +204,7 @@ __global__ void preprocess_in_parallel(segment* input, int size, ofVec2f *q, seg
     int tid = threadIdx.x;
     if(tid < size) {
         input[tid].translateToQ(*q);
+        printf("Output: input[tid]: %f\n", input[tid].p1.x);
         // if(input[tid].collinearWithQ() != 0.0f){
         //     // input[tid].erase(it);
         //     if(input[tid].possibleIntersectionTestXAxis()) {
