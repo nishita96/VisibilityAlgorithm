@@ -49,10 +49,10 @@ public:
     }
 };
 
-__device__ ofVec2f* create_ofvec_obj(int x, int y) {
-    ofVec2f* vec = new ofVec2f(x, y, 0);
-    return vec;
-}
+// __device__ ofVec2f* create_ofvec_obj(int x, int y) {
+//     ofVec2f* vec = new ofVec2f(x, y, 0);
+//     return vec;
+// }
 
 using namespace std;
 #define BLOCK_SIZE 512 //@@ You can change this
@@ -216,8 +216,8 @@ __global__ void preprocess_in_parallel(segment* input, int size, int x, int y, s
         // ofVec2f* q = create_ofvec_obj(x, y);
         ofVec2f q(x, y, 0);
         printf("sdfs\n");
-        // printf("Output: input[tid]: %f\n", input[tid].p1.x);
-        // input[tid].translateToQ(q);
+        printf("Output: input[tid]: %f\n", input[tid].p1.x);
+        input[tid].translateToQ(q);
         
         // if(input[tid].collinearWithQ() != 0.0f){
         //     // input[tid].erase(it);
