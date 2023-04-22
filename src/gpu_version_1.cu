@@ -89,7 +89,7 @@ public:
      bool possibleIntersectionTestXAxis();
      ofVec2f splitSegmentInto2();
      ofVec2f intersectionWithGivenSegment(segment other);
-     bool collinearWithQ(); // q is always 0 after translation
+     __device__ bool collinearWithQ(); // q is always 0 after translation
      vector<vray> generateVray(segment seg);
 };
 
@@ -179,7 +179,7 @@ ofVec2f segment::intersectionWithGivenSegment(segment other){
 }
 
 
-bool segment::collinearWithQ(){
+__device__ bool segment::collinearWithQ(){
     return abs(p0.x * p1.y - p0.y * p1.x)/2;
 }
 
@@ -219,24 +219,24 @@ __global__ void preprocess_in_parallel(segment* input, int size, int x, int y, s
         printf("Output: input[tid]: %f\n", input[tid].p1.x);
         input[tid].translateToQ(q);
         
-        // if(input[tid].collinearWithQ() != 0.0f){
-        //     // input[tid].erase(it);
-        //     if(input[tid].possibleIntersectionTestXAxis()) {
-        //         ofVec2f splitPoint = input[tid].splitSegmentInto2();
-        //         if(splitPoint.x != -1.0f){ 
-        //             output[2 * tid] = segment(input[tid].p0, splitPoint);
-        //             output[2 * tid + 1] = segment(input[tid].p1, splitPoint);
-        //             output[2 * tid].isValid = true;
-        //             output[2 * tid + 1].isValid = true;
-        //         } else {
-        //             output[2 * tid] = segment(input[tid].p0, input[tid].p1);
-        //             output[2 * tid].isValid = true;
-        //         }
-        //     } else {
-        //         output[2 * tid] = segment(input[tid].p0, input[tid].p1);
-        //         output[2 * tid].isValid = true;
-        //     }
-        // }
+        if(input[tid].collinearWithQ() != 0.0f){
+            // input[tid].erase(it);
+            // if(input[tid].possibleIntersectionTestXAxis()) {
+            //     ofVec2f splitPoint = input[tid].splitSegmentInto2();
+            //     if(splitPoint.x != -1.0f){ 
+            //         output[2 * tid] = segment(input[tid].p0, splitPoint);
+            //         output[2 * tid + 1] = segment(input[tid].p1, splitPoint);
+            //         output[2 * tid].isValid = true;
+            //         output[2 * tid + 1].isValid = true;
+            //     } else {
+            //         output[2 * tid] = segment(input[tid].p0, input[tid].p1);
+            //         output[2 * tid].isValid = true;
+            //     }
+            // } else {
+            //     output[2 * tid] = segment(input[tid].p0, input[tid].p1);
+            //     output[2 * tid].isValid = true;
+            // }
+        }
     }
 }
 
