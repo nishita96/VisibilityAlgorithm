@@ -50,7 +50,7 @@ public:
 };
 
 __device__ ofVec2f* create_ofvec_obj(int x, int y) {
-    ofVec2f* vec = new ofVec2f(x, y);
+    ofVec2f* vec = new ofVec2f(x, y, 0);
     return vec;
 }
 
