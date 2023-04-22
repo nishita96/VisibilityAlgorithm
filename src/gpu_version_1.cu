@@ -198,7 +198,7 @@ vector<vray> segment::generateVray(segment seg){
 __global__ void preprocess_in_parallel(segment* input) {
 
         
-    std::cout<<"Hello\n";
+    // std::cout<<"Hello\n";
     // std::cout<<segment[0]->p0.x<<std::endl;
 
 
