@@ -24,7 +24,7 @@ public:
         y = _y;
     }
 
-    void set(float _x, float _y) {
+    __device__ void set(float _x, float _y) {
         x = _x;
         y = _y;
     }
