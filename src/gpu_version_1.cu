@@ -429,7 +429,7 @@ class GPU_V1 {
                 filtered_segments.push_back(ps);
             }
         }
-        vector<segment> filtered_segments;
+        // vector<segment> filtered_segments;
         return filtered_segments;
 
     }
