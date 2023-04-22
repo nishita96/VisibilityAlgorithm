@@ -243,26 +243,26 @@ __global__ void preprocess_in_parallel(segment* input, int size, int x, int y, s
 
 class GPU_V1 {
     float infinity = 9999.0f;
-    vector<segment> check_intersections(vector<segment>& segments) {
-        vector<segment> listSegmentsCopy;
-        for (auto seg: segments){
-            if(seg.possibleIntersectionTestXAxis()){
-                ofVec2f splitPoint = seg.splitSegmentInto2();
-                if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
-                    // TODO check if you need to check which has smaller angle
-                    listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
-                    listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
-                }
-                else{
-                    listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-                }
-            }
-            else{
-                listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-            }
-        }
-        return listSegmentsCopy;
-    }
+    // vector<segment> check_intersections(vector<segment>& segments) {
+    //     vector<segment> listSegmentsCopy;
+    //     for (auto seg: segments){
+    //         if(seg.possibleIntersectionTestXAxis()){
+    //             ofVec2f splitPoint = seg.splitSegmentInto2();
+    //             if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
+    //                 // TODO check if you need to check which has smaller angle
+    //                 listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
+    //                 listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
+    //             }
+    //             else{
+    //                 listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
+    //             }
+    //         }
+    //         else{
+    //             listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
+    //         }
+    //     }
+    //     return listSegmentsCopy;
+    // }
 
     vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2){
         vector<vray> l;
