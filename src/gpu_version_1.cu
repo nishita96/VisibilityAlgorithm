@@ -131,7 +131,7 @@ __device__ bool segment::possibleIntersectionTestXAxis(){
     // Should return the intersection point or null, if no intersection exists.
     //  Care should be taken to make the implementation CORRECT, but SPEED MATTERS.
      
-    segment other(ofVec2f(0.0f, 0.0f), ofVec2f(1500.0f, 0.0f)); // x axis as segment
+    segment other(ofVec2f(0.0f, 0.0f, 0), ofVec2f(1500.0f, 0.0f, 0)); // x axis as segment
     //do the p1 - p0 and use that so that number of multiplication is less
     float p0x = other.p0.x;
     float p0y = other.p0.y;
@@ -147,10 +147,10 @@ __device__ bool segment::possibleIntersectionTestXAxis(){
         if(0 < t && t < 1){ // does not take the end points
              float pointX = p0x + ((p1x - p0x) * t);
              float pointY = p0y + ((p1y - p0y) * t);
-             return ofVec2f(pointX, pointY);
+             return ofVec2f(pointX, pointY, 0);
         }
     }
-    return ofVec2f(-1.0f, 0.0f); // if no intersection THEN returned point has x<0
+    return ofVec2f(-1.0f, 0.0f, 0); // if no intersection THEN returned point has x<0
 }
 
 
