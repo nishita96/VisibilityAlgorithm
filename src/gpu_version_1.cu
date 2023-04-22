@@ -236,9 +236,10 @@ __global__ void preprocess_in_parallel(segment* input, int size, int x, int y, s
                     output[2 * tid].isValid = true;
                 }
             } else {
-                printf("No splitting 2 to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
                 output[2 * tid] = segment(input[tid].p0, input[tid].p1, 0);
                 output[2 * tid].isValid = true;
+                printf("No splitting 2 to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
+                printf("No splitting 2 in output to q Id: %d, po.x: %f p1.x: %f\n", tid, output[2*tid].p0.x, output[2*tid].p1.x);
             }
         }
     }
