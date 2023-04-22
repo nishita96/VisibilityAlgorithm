@@ -200,7 +200,8 @@ __global__ void preprocess_in_parallel(segment* input) {
         
     // std::cout<<"Hello\n";
     // std::cout<<segment[0]->p0.x<<std::endl;
-    fprintf(stdout, "Segment: %f\n", input[0]->p0.x);
+    // fprintf(stdout, "Segment: %f\n", input[0]->p0.x);
+    fprintf(stdout, "Segment:\n");
 
 }
 
