@@ -400,14 +400,14 @@ class GPU_V1 {
 
         // preprocess_in_parallel<<blocksPerGrid, threadsPerBlock>> (d_segments, (int)segments.size());
         preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments);
-        // cudaDeviceSynchronize();
-        // err = cudaGetLastError();
+        cudaDeviceSynchronize();
+        err = cudaGetLastError();
 
-        // if (err != cudaSuccess)
-        // {
-        //     fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
-        //     exit(EXIT_FAILURE);
-        // }
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
         // float vray_count = 0;
         // err = cudaMemcpy(vray_count, d_vray_count, size(float), cudaMemcpyDeviceToHost);
         // vray preprocessed_vrays[100];
@@ -423,8 +423,8 @@ class GPU_V1 {
         std::cout<<"Starting Process"<<std::endl;
         vector<segment> updated_segments = this->preprocess(segments, q);
         std::cout<<"Preprocess complete"<<std::endl;
-        vector<vray> merged_vrays = this->merge(updated_segments);
-        std::cout<<"Ending Process"<<std::endl;
+        // vector<vray> merged_vrays = this->merge(updated_segments);
+        // std::cout<<"Ending Process"<<std::endl;
         // end = 0;
         return merged_vrays;
     }
