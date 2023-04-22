@@ -36,12 +36,12 @@ public:
         return new_vec;
     }
 
-    //  ofVec2f operator*(float scale) {
-    //     ofVec2f vec(1,1);
-    //     vec.x = this->x * scale;
-    //     vec.y = this->y * scale;
-    //     return vec;
-    // }
+     ofVec2f operator*(float scale) {
+        ofVec2f vec(1,1);
+        vec.x = this->x * scale;
+        vec.y = this->y * scale;
+        return vec;
+    }
 };
 
 
