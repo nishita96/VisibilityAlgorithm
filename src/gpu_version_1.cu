@@ -398,12 +398,8 @@ class GPU_V1 {
         segment *d_output_segments;
         cudaMalloc(&d_output_segments, 2 * segments.size() * sizeof(segment));
 
-        // int* output_num;
-        // cudaMalloc(&output_num, sizeof(int));
-        // output_num = 0;
-
-        // ofVec2f *d_q;
-        // cudaMalloc(&d_q, sizeof(ofVec2f));
+        ofVec2f *d_q;
+        cudaMalloc(&d_q, sizeof(ofVec2f));
         // d_q->x = q.x;
         // d_q->y = q.y;
         int threadsPerBlock = 100;
