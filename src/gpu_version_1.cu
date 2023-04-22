@@ -400,8 +400,14 @@ class GPU_V1 {
 
         ofVec2f *d_q;
         cudaMalloc(&d_q, sizeof(ofVec2f));
-        // d_q->x = q.x;
-        // d_q->y = q.y;
+        err = cudaMemcpy(d_q, q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
+
+
         int threadsPerBlock = 100;
         int blocksPerGrid = 1;
         // preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), *d_q, d_output_segments);
