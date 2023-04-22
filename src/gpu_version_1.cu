@@ -14,7 +14,7 @@ public:
     float x;
     float y;
     
-    __global__ ofVec2f(float _x, float _y) {
+    ofVec2f(float _x, float _y) {
         x = _x;
         y = _y;
     }
