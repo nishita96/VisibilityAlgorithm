@@ -408,24 +408,25 @@ class GPU_V1 {
         d_q->y = q.y;
         int threadsPerBlock = 100;
         int blocksPerGrid = 1;
-        preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), *d_q, d_output_segments);
-        cudaDeviceSynchronize();
-        err = cudaGetLastError();
-        if (err != cudaSuccess)
-        {
-            fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
-            exit(EXIT_FAILURE);
-        }
-        vector<segment> preprocessed_segments;
-        err = cudaMemcpy(preprocessed_segments.data(), d_output_segments, 2 * segments.size() * sizeof(segment), cudaMemcpyDeviceToHost);
-        // cudaFree(d_output_segments);
-        // cudaFree(d_segments);
+        // preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), *d_q, d_output_segments);
+        // cudaDeviceSynchronize();
+        // err = cudaGetLastError();
+        // if (err != cudaSuccess)
+        // {
+        //     fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
+        //     exit(EXIT_FAILURE);
+        // }
+        // vector<segment> preprocessed_segments;
+        // err = cudaMemcpy(preprocessed_segments.data(), d_output_segments, 2 * segments.size() * sizeof(segment), cudaMemcpyDeviceToHost);
+        // // cudaFree(d_output_segments);
+        // // cudaFree(d_segments);
+        // vector<segment> filtered_segments;
+        // for(auto ps : preprocessed_segments) {
+        //     if(ps.isValid) {
+        //         filtered_segments.push_back(ps);
+        //     }
+        // }
         vector<segment> filtered_segments;
-        for(auto ps : preprocessed_segments) {
-            if(ps.isValid) {
-                filtered_segments.push_back(ps);
-            }
-        }
         return filtered_segments;
 
     }
