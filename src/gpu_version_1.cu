@@ -407,3 +407,9 @@ class GPU_V1 {
     }
 };
 
+
+int main() {
+
+    return 0;
+}
+
