@@ -6,6 +6,7 @@
 #include "cuda.h"
 #include <iostream>
 // #include "ofMain.h"
+#include <ctime>
 
 #define PI 3.14
 
@@ -390,6 +391,8 @@ class GPU_V1 {
         return vrayForMerge;
     }
 
+    public:
+
     vector<segment> preprocess(vector<segment>& segments, ofVec2f& q) {
             
         cudaError_t err = cudaSuccess;
@@ -432,7 +435,6 @@ class GPU_V1 {
 
     }
 
-    public:
     virtual vector<vray> process_segments(vector<segment> segments, ofVec2f& q) {
         // start = 0;
         std::cout<<"Starting Process"<<std::endl;
@@ -449,7 +451,9 @@ class GPU_V1 {
 void test_preprocessing() {
 
     vector<int> all_time;
-    for(int i=0;i<500;i++) {
+    int iteration = 500;
+    double timeDuration = 0.0;
+    for(int i=0;i<iteration;i++) {
         vector<segment> listSegments = {
             segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
             segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
@@ -462,19 +466,28 @@ void test_preprocessing() {
         };
         ofVec2f pointQ(500,400);
         GPU_V1 *gpu = new GPU_V1();
-        auto start = chrono::high_resolution_clock::now();
-        vector<segment> segments = gpu->preprocess(listSegments, q);
-        auto stop = chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
-        all_time.push_back(duration);
+        // auto start = chrono::high_resolution_clock::now();
+        // std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+        clock_t begin = clock();
+
+        vector<segment> segments = gpu->preprocess(listSegments, pointQ);
+        // auto stop = chrono::high_resolution_clock::now();
+        // std::chrono::steady_clock::time_point stop = std::chrono::steady_clock::now();
+        clock_t end = clock();
+        double duration = double(end-begin) / CLOCKS_PER_SEC;
+        // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+        // all_time.push_back(duration);
+        timeDuration = timeDuration + duration;
     }
-    return (float)std::reduce(all_time.begin(), all_time.end())/(float) all_time.size();
+    //return timeDuration/iteration;//(float)std::reduce(all_time.begin(), all_time.end())/(float) all_time.size();
+    cout << "\n Prreprocessing in GPU: " << timeDuration/iteration;
 }
 
 int main() {
 
     //TEST Preprocessing
-    std::cout<<"Time taken For Preprocessing in GPU: "<< test_preprocessing() <<std::endl;
+    // std::cout<<"Time taken For Preprocessing in GPU: ";//<< test_preprocessing() <<std::endl;
+    test_preprocessing();
 
 //     vector<segment> listSegments = {
 //         segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
