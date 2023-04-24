@@ -86,7 +86,7 @@ public:
     
      int signum(float f);
     __device__ void translateToQ(ofVec2f pointQ){
-        printf("inside translateToQ\n");
+        // printf("inside translateToQ\n");
         p0.set(p0.x - pointQ.x, -(p0.y - pointQ.y)); // because display needs oroginal coordinates but geomterically the y direction is opposite
         p1.set(p1.x - pointQ.x, -(p1.y - pointQ.y));
     }
@@ -219,28 +219,28 @@ __global__ void preprocess_in_parallel(segment* input, int size, int x, int y, s
     if(tid < size) {
         // ofVec2f* q = create_ofvec_obj(x, y);
         ofVec2f q(x, y, 0);
-        printf("Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
+        // printf("Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
         input[tid].translateToQ(q);
-        printf("After translation to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
+        // printf("After translation to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
         if(input[tid].collinearWithQ() != 0.0f){
             if(input[tid].possibleIntersectionTestXAxis()) {
                 ofVec2f splitPoint = input[tid].splitSegmentInto2();
                 if(splitPoint.x != -1.0f){ 
-                    printf("splitting to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
+                    // printf("splitting to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
                     output[2 * tid] = segment(input[tid].p0, splitPoint, 0);
                     output[2 * tid + 1] = segment(input[tid].p1, splitPoint, 0);
                     output[2 * tid].isValid = true;
                     output[2 * tid + 1].isValid = true;
                 } else {
-                    printf("No splitting to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
+                    // printf("No splitting to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
                     output[2 * tid] = segment(input[tid].p0, input[tid].p1, 0);
                     output[2 * tid].isValid = true;
                 }
             } else {
                 output[2 * tid] = segment(input[tid].p0, input[tid].p1, 0);
                 output[2 * tid].isValid = true;
-                printf("No splitting 2 to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
-                printf("No splitting 2 in output to q Id: %d, po.x: %f p1.x: %f\n", tid, output[2*tid].p0.x, output[2*tid].p1.x);
+                // printf("No splitting 2 to q Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
+                // printf("No splitting 2 in output to q Id: %d, po.x: %f p1.x: %f\n", tid, output[2*tid].p0.x, output[2*tid].p1.x);
             }
         }
     }
