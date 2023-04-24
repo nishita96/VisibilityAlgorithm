@@ -172,7 +172,7 @@ void test_preprocessing() {
         auto start = chrono::high_resolution_clock::now();
         vector<segment> segments = cpu->preprocess(listSegments, q);
         auto stop = chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
         all_time.push_back(duration);
     }
     return (float)std::reduce(all_time.begin(), all_time.end())/(float) all_time.size();
