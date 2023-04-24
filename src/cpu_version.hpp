@@ -116,7 +116,7 @@ class CPU: public VisibilityBase {
     //    printAllVrays(l);
         return l;
     }
-
+    public:
     vector<vray> merge(vector<segment>& listSegmentsCopy) {
         int minValueR = 9999.0f;
         vector<vray> vrayForMerge;
@@ -165,7 +165,7 @@ class CPU: public VisibilityBase {
         return fresh_segments;
     }
 
-    public:
+    
     virtual vector<vray> process_segments(vector<segment> segments, ofVec2f& q) {
         // start = 0;
         std::cout<<"Starting Process"<<std::endl;

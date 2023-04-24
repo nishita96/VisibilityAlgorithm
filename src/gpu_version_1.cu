@@ -401,20 +401,8 @@ class GPU_V1 {
             fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
-
         segment *d_output_segments;
         cudaMalloc(&d_output_segments, 2 * segments.size() * sizeof(segment));
-
-        // ofVec2f *d_q;
-        // cudaMalloc((void**)d_q, sizeof(ofVec2f));
-        // err = cudaMemcpy(d_q, &q, sizeof(ofVec2f), cudaMemcpyHostToDevice);
-        // if (err != cudaSuccess)
-        // {
-        //     fprintf(stderr, "Failed to allocate d_q (error code %s)!\n", cudaGetErrorString(err));
-        //     exit(EXIT_FAILURE);
-        // }
-
-
         int threadsPerBlock = 100;
         int blocksPerGrid = 1;
         preprocess_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), q.x, q.y, d_output_segments);
@@ -426,8 +414,6 @@ class GPU_V1 {
             exit(EXIT_FAILURE);
         }
         segment* preprocessed_segments = (segment*) malloc(sizeof(segment) * 2 * segments.size());
-        // segment *preprocessed_segments = new segment[2 * segments.size()];
-        // vector<segment> preprocessed_segments;
         err = cudaMemcpy(preprocessed_segments, d_output_segments, 2 * segments.size() * sizeof(segment), cudaMemcpyDeviceToHost);
         if (err != cudaSuccess)
         {
@@ -437,7 +423,6 @@ class GPU_V1 {
         vector<segment> filtered_segments;
         for(int i=0;i<2*segments.size();i++) {
             if(preprocessed_segments[i].isValid) {
-                printf("preprocessed_segments: \n");
                 filtered_segments.push_back(preprocessed_segments[i]);
             }
         }
@@ -461,21 +446,48 @@ class GPU_V1 {
     }
 };
 
+void test_preprocessing() {
+
+    vector<int> all_time;
+    for(int i=0;i<500;i++) {
+        vector<segment> listSegments = {
+            segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+            segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+            segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+            segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+            segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+
+    //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+            segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+        };
+        ofVec2f pointQ(500,400);
+        GPU_V1 *gpu = new GPU_V1();
+        auto start = chrono::high_resolution_clock::now();
+        vector<segment> segments = gpu->preprocess(listSegments, q);
+        auto stop = chrono::high_resolution_clock::now();
+        all_time.push_back(stop-start);
+    }
+    return (float)std::reduce(all_time.begin(), all_time.end())/(float) all_time.size();
+}
 
 int main() {
-    vector<segment> listSegments = {
-        segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
-        segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
-        segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-        segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-        segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
 
-//        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
-        segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
-    };
-    ofVec2f pointQ(500,400);
-    GPU_V1 *v1 = new GPU_V1();
-    v1->process_segments(listSegments, pointQ);
+    //TEST Preprocessing
+    std::cout<<"Time taken For Preprocessing in GPU: "<< test_preprocessing() <<std::endl;
+
+//     vector<segment> listSegments = {
+//         segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+//         segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+//         segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+//         segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+//         segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+
+// //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+//         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+//     };
+//     ofVec2f pointQ(500,400);
+//     GPU_V1 *v1 = new GPU_V1();
+//     v1->process_segments(listSegments, pointQ);
     return 0;
 }
 

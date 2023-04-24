@@ -2,10 +2,12 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <chrono>
 
 #include "ofApp.h"
 #include "segment.hpp"
 #include "vray.hpp"
+#include "cpu_version.hpp"
 
 
 
@@ -151,7 +153,35 @@ bool myComparator(vray a, vray b){
     return a.theta < b.theta;
 }
 
+void test_preprocessing() {
+
+    vector<int> all_time;
+    for(int i=0;i<500;i++) {
+        vector<segment> listSegments = {
+            segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+            segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+            segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+            segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+            segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+
+    //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+            segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+        };
+        ofVec2f pointQ(500,400);
+        CPU *cpu = new CPU();
+        auto start = chrono::high_resolution_clock::now();
+        vector<segment> segments = cpu->preprocess(listSegments, q);
+        auto stop = chrono::high_resolution_clock::now();
+        all_time.push_back(stop-start);
+    }
+    return (float)std::reduce(all_time.begin(), all_time.end())/(float) all_time.size();
+}
+
 vector<ofVec2f> calculatePointsForTriangles(vector<vray> vrayForMerge, ofVec2f pointQ){
+    
+    //TEST Preprocessing
+    std::cout<<"Time taken For Preprocessing in CPU: "<< test_preprocessing() <<std::endl;
+    
     vector<ofVec2f> pointsPolygon;
     vray v = vrayForMerge.at(0);
     float xx = 0.0f;
@@ -228,6 +258,9 @@ int main( ){
     ofAppNew.setOfSegments = listSegments;
     
     
+
+
+
 //    // PREPROCESS
 //    // ---- translate all segments to q (q becomes origin)
 //    for(int i=0; i< listSegments.size(); i++){
