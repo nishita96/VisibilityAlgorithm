@@ -407,7 +407,7 @@ int main( ){
     // TODO ignore the point 0.0f,0.0f , might make some cases bad
     
 
-    cout << "\n ";
+    cout << "\n end of processing.";
     
     
 //    // POINTS TO DRAW THE POLYGON
