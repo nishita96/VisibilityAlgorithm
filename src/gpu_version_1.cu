@@ -362,7 +362,6 @@ class GPU_V1 {
 
     vector<vray> merge(vector<segment>& listSegmentsCopy) {
         
-        
         int minValueR = 9999.0f;
         vector<vray> vrayForMerge;
         vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(0));
