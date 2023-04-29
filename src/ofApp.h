@@ -31,6 +31,7 @@ class ofApp : public ofBaseApp{
         vector<vray> vrayForMerge;
         vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2);
         vector<ofVec2f> calculatePointsForTriangles(vector<vray> vrayForMerge, ofVec2f pointQ);
+		void doPreprocessing();
         void doEverything();
         void mergeSequantially(int minValueR);
         void drawPolygon();

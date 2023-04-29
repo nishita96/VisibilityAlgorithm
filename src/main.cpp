@@ -191,6 +191,84 @@ vector<ofVec2f> calculatePointsForTriangles(vector<vray> vrayForMerge, ofVec2f p
     return pointsPolygon;
 }
 
+
+// void test_preprocessing() {
+
+//     vector<int> all_time;
+//     int iteration = 500;
+//     double timeDuration = 0.0;
+//     for(int i=0;i<iteration;i++) {
+//         vector<segment> listSegments = {
+//             segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+//             segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+//             segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+//             segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+//             segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+
+//     //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+//             segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+//         };
+//         ofVec2f pointQ(500,400);
+//         clock_t begin = clock();
+        
+
+//     // PREPROCESS
+//    // ---- translate all segments to q (q becomes origin)
+//    for(int i=0; i< setOfSegments.size(); i++){
+//        setOfSegments.at(i).translateToQ(q);
+//    }
+// //    cout << "\n size after transalation to Q " << listSegments.size() ;
+
+//    // ---- removing points collinear (checking - if area of triangle Q p0 p1 = 0 then they are collinear)
+//    for (vector<segment>::iterator it = setOfSegments.begin(); it != setOfSegments.end();){
+//        if(it->collinearWithQ() == 0.0f){
+//            setOfSegments.erase(it); // automatically iterates to next item after erasing
+//        }
+//        else{
+//            ++it;
+//        }
+//    }
+// //    cout << "\n size after removing collinear segments " << listSegments.size() ;
+
+//    // ---- divde segment into 2 is cuts xaxis properly (slope != 0)
+// //    vector<segment>::iterator it = listSegments.begin(); // TODO has some issue, removes the wrong segment
+// //    vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
+//    listSegmentsCopy.clear();
+//    bool splitsAtX = false;
+//    for (auto seg: setOfSegments){
+//        if(seg.possibleIntersectionTestXAxis()){
+//            ofVec2f splitPoint = seg.splitSegmentInto2();
+//            if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
+//                // TODO check if you need to check which has smaller angle
+//                splitsAtX = true;
+//                listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
+//                listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
+//            }
+//            else{
+//                listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
+//            }
+//        }
+//        else{
+//            listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
+//        }
+//    }
+// //    cout << "\n size after spliting xaxis segments(copy) " << listSegmentsCopy.size() << "\n" ;
+
+
+
+
+
+
+
+//         clock_t end = clock();
+//         double duration = double(end-begin) / CLOCKS_PER_SEC;
+//         // auto duration = std::chrono::duration_cast<std::chr
+//         timeDuration = timeDuration + duration;
+//     }
+//     //return timeDuration/iteration;//(float)std::reduce(all_time.begin(), all_time.end())/(float) all_time.size();
+//     cout << "\n Preprocessing in CPU: " << timeDuration/iteration;
+// }
+
 vector<segment> generateSegments(int n){
     vector<segment> ret;
     // int full = n%
@@ -212,6 +290,10 @@ vector<segment> generateSegments(int n){
 }
 
 int main( ){
+
+    // test_preprocessing();
+
+
     // do all processing
     
     ofApp ofAppNew;
@@ -243,6 +325,23 @@ int main( ){
     ofAppNew.setOfSegmentsOriginal = listSegments;
     ofAppNew.setOfSegmentsToDraw = listSegments;
     ofAppNew.setOfSegments = listSegments;
+
+    int iteration = 500;
+    double timeCpu = 0.00;
+    for(int i=0; i<iteration; i++){
+        clock_t begin = clock();
+
+        ofAppNew.doPreprocessing();
+
+        clock_t end = clock();
+        double duration = double(end-begin) / CLOCKS_PER_SEC;
+        timeCpu = timeCpu + duration;
+    }
+    cout.precision(17);
+    cout << fixed << "\n Preprocessing in CPU: " << timeCpu/iteration;
+
+
+
     
     
 //    // PREPROCESS
@@ -331,7 +430,7 @@ int main( ){
     // TODO ignore the point 0.0f,0.0f , might make some cases bad
     
 
-    cout << "\n ";
+    cout << "\n end of processing.";
     
     
 //    // POINTS TO DRAW THE POLYGON
