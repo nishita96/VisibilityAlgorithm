@@ -6,8 +6,8 @@ endif
 
 # make sure the the OF_ROOT location is defined
 ifndef OF_ROOT
-	OF_ROOT=$(realpath ../../..)
+	OF_ROOT=/home/nishita/Documents/of_v0.11.2_linux64gcc6_release
 endif
-
+# $(realpath ../../..) 
 # call the project makefile!
 include $(OF_ROOT)/libs/openFrameworksCompiled/project/makefileCommon/compile.project.mk

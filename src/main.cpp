@@ -191,6 +191,26 @@ vector<ofVec2f> calculatePointsForTriangles(vector<vray> vrayForMerge, ofVec2f p
     return pointsPolygon;
 }
 
+vector<segment> generateSegments(int n){
+    vector<segment> ret;
+    // int full = n%
+    float r = 5.0f;
+    float theta = 0.1f;
+    for (int i=0; i<n; i++) {
+        r = r + 3.0;
+        theta = theta + 0.1;
+        float x0 = r * cos(theta) + 500;
+        float y0 = r * sin(theta) + 400;
+        r = r + 3.0;
+        theta = theta + 0.1;
+        float x1 = r * cos(theta)+ 500;
+        float y1 = r * sin(theta)+ 400;
+        cout << x0 << y0 << y0 << y1<< endl;
+        ret.push_back(segment(ofVec2f(x0, y0), ofVec2f(x1, y1)));
+    }
+    return ret;
+}
+
 int main( ){
     // do all processing
     
@@ -203,18 +223,21 @@ int main( ){
     // ---- define the point Q
     ofVec2f pointQ(500,400); //= ofGetWindowSize() / 2;
     ofAppNew.q = pointQ;
+
+    int numSegments = 100;
+    vector<segment> listSegmentsGenerated = generateSegments(numSegments);
     
     // ---- made a set of segments covering cases
-    vector<segment> listSegments = {
-        segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
-        segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
-        segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-        segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-        segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+    vector<segment> listSegments = listSegmentsGenerated; //= {
+        // segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+        // segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+        // segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+        // segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+        // segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
 
-//        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
-        segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
-    };
+// //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+//         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+//     };
     
     // ---- add segments to draw
     ofAppNew.setOfSegmentsOriginal = listSegments;
