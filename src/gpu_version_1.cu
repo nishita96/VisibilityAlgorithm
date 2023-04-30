@@ -8,6 +8,7 @@
 // #include "ofMain.h"
 #include <ctime>
 #include <cmath>
+#include<chrono>
 
 #define PI 3.14
 
@@ -728,7 +729,13 @@ void test_preprocessing() {
     cout << fixed << "\n Merge Sequential time in GPU: " << timeCpu/iteration<<endl;
     
 
-
+    auto begin = chrono::high_resolution_clock::now();    
+    int x;
+    cin >> x;      // wait for user input
+    auto end = chrono::high_resolution_clock::now();    
+    auto dur = end - begin;
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+    cout<<ms<<endl;
     // vector<int> all_time;
     
     // double timeDuration = 0.0;
