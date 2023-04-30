@@ -292,6 +292,11 @@ vector<segment> generateSegments(int n){
 
 void test_performance() {
 
+    int segment_count = 450;
+    int iteration = 500;
+    
+    vector<segment> listSegments = generateSegments(segment_count);
+    cout<<"TESTING "<<segment_count<< " in "<<iteration<<" iterations"<<endl;
     vector<segment> listSegments = generateSegments(500);
 
     ofApp ofAppNew;
@@ -301,7 +306,7 @@ void test_performance() {
     ofAppNew.setOfSegmentsToDraw = listSegments;
     ofAppNew.setOfSegments = listSegments;
 
-    int iteration = 500;
+    
     
     
 
