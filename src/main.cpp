@@ -347,7 +347,7 @@ int main( ){
     for(int i=0; i<iteration; i++){
         time_t start = time(NULL);
 
-        ofAppNew.mergeSequantially();
+        ofAppNew.mergeSequantially(9999.0);
 
         time_t end = time(NULL);
         // double duration = double(end-begin) / CLOCKS_PER_SEC;
