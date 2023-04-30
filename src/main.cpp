@@ -306,7 +306,7 @@ int main( ){
     ofVec2f pointQ(500,400); //= ofGetWindowSize() / 2;
     ofAppNew.q = pointQ;
 
-    int numSegments = 100;
+    int numSegments = 1000;
     vector<segment> listSegmentsGenerated = generateSegments(numSegments);
     
     // ---- made a set of segments covering cases
@@ -339,6 +339,22 @@ int main( ){
     }
     cout.precision(17);
     cout << fixed << "\n Preprocessing in CPU: " << timeCpu/iteration;
+
+
+
+    timeCpu = 0.00;
+    for(int i=0; i<iteration; i++){
+        clock_t begin = clock();
+
+        ofAppNew.mergeSequantially(9999);
+
+        clock_t end = clock();
+        double duration = double(end-begin) / CLOCKS_PER_SEC;
+        timeCpu = timeCpu + duration;
+    }
+    cout.precision(17);
+    cout << fixed << "\n Merge Sequential time in CPU: " << timeCpu/iteration;
+
 
 
 
@@ -448,7 +464,7 @@ int main( ){
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:
-	ofRunApp( &ofAppNew);
+	// ofRunApp( &ofAppNew);
 
 }
 
