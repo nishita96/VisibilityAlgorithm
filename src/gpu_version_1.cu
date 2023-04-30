@@ -692,11 +692,12 @@ vector<segment> generateSegments(int n){
 
 void test_preprocessing() {
 
+    int iteration = 500;
     vector<segment> listSegments = generateSegments(iteration);
     ofVec2f pointQ(500,400);
 
     GPU_V1 *gpu = new GPU_V1();
-    int iteration = 500;
+    
     double timeCpu = 0.00;
     vector<segment> updated_segments;
     for(int i=0; i<iteration; i++){
