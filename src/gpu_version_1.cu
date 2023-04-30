@@ -687,7 +687,48 @@ void test_preprocessing() {
             segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
         };
         ofVec2f pointQ(500,400);
+
         GPU_V1 *gpu = new GPU_V1();
+        
+        int iteration = 500;
+        double timeCpu = 0.00;
+        vector<segment> updated_segments;
+        for(int i=0; i<iteration; i++){
+            time_t start = time(NULL);
+
+            updated_segments = gpu->preprocess(preprocess, q);
+
+            time_t end = time(NULL);
+            // double duration = double(end-begin) / CLOCKS_PER_SEC;
+            double duration = double(end-start);
+            timeCpu = timeCpu + duration;
+        }
+        cout.precision(17);
+        cout << fixed << "\n Preprocessing in GPU: " << timeCpu/iteration;
+
+        vector<vray> initial_vrays;
+        for(int i =0; i<updated_segments.size(); i++){
+            segment s = updated_segments.at(i);
+            initial_vrays.push_back(s.generateVray(s).at(0));
+            initial_vrays.push_back(s.generateVray(s).at(1));
+        }
+        
+        timeCpu = 0.00;
+        for(int i=0; i<iteration; i++){
+            time_t start = time(NULL);
+
+            gpu->mergeVraysGpu(initial_vrays);
+
+            time_t end = time(NULL);
+            // double duration = double(end-begin) / CLOCKS_PER_SEC;
+            double duration = double(end-start);
+            timeCpu = timeCpu + duration;
+        }
+        cout.precision(17);
+        cout << fixed << "\n Merge Sequential time in GPU: " << timeCpu/iteration;
+        
+
+        
         // auto start = chrono::high_resolution_clock::now();
         // std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
         clock_t begin = clock();
