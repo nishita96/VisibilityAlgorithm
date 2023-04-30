@@ -569,7 +569,7 @@ class GPU_V1 {
     }
 
     vray* mergeVraysGpu(vector<vray>& initial_vray_list){
-        cout << "\n do";
+        // cout << "\n do";
         vector<vray> ret;
 
   
@@ -605,7 +605,7 @@ class GPU_V1 {
 
         // int threadsPerBlock = 100;
         // int blocksPerGrid = 1;
-        int threadsPerBlock = 16;
+        int threadsPerBlock = 1024;
         int blocksPerGrid = 1;
         merge_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_vrays, initial_vray_list.size(), d_output_vrays);
         cudaDeviceSynchronize();
