@@ -694,7 +694,7 @@ vector<segment> generateSegments(int n){
 void test_preprocessing() {
 
     int iteration = 500;
-    vector<segment> listSegments = generateSegments(iteration);
+    vector<segment> listSegments = generateSegments(100);
     ofVec2f pointQ(500,400);
 
     GPU_V1 *gpu = new GPU_V1();
@@ -707,7 +707,7 @@ void test_preprocessing() {
         // time_t end = time(NULL);
         // double duration = double(end-start);
         // timeCpu = timeCpu + duration;
-        
+
         auto begin = chrono::high_resolution_clock::now();    
         updated_segments = gpu->preprocess(listSegments, pointQ);
         auto end = chrono::high_resolution_clock::now();    
@@ -719,6 +719,8 @@ void test_preprocessing() {
     }
     cout.precision(17);
     cout << fixed << "\n Preprocessing in GPU: " << timeCpu/iteration<<endl;
+    
+    
     vector<vray> initial_vrays;
     for(int i =0; i<updated_segments.size(); i++){
         segment s = updated_segments.at(i);
