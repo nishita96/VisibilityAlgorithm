@@ -706,7 +706,7 @@ void test_preprocessing() {
     vector<segment> updated_segments;
     for(int i=0; i<iteration; i++){
         time_t start = time(NULL);
-        updated_segments = gpu->preprocess(listSegments, q);
+        updated_segments = gpu->preprocess(listSegments, pointQ);
         time_t end = time(NULL);
         // double duration = double(end-begin) / CLOCKS_PER_SEC;
         double duration = double(end-start);
