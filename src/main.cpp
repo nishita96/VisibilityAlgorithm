@@ -310,7 +310,7 @@ void test_performance() {
     vector<segment> updated_segments;
     for(int i=0; i<iteration; i++){
         auto begin = chrono::high_resolution_clock::now();    
-        updated_segments = ofAppNew.doPreprocessing();
+        ofAppNew.doPreprocessing();
         auto end = chrono::high_resolution_clock::now();    
         auto dur = end - begin;
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
