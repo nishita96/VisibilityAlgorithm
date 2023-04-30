@@ -768,22 +768,22 @@ int main() {
 
     //TEST Preprocessing
     // std::cout<<"Time taken For Preprocessing in GPU: ";//<< test_preprocessing() <<std::endl;
-    // test_preprocessing();
+    test_preprocessing();
 
-    vector<segment> listSegments = {
-        segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
-        segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
-        segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-        segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-        segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+//     vector<segment> listSegments = {
+//         segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+//         segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+//         segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+//         segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+//         segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
 
-//        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
-        segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
-    };
+// //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+//         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+//     };
     
-    ofVec2f pointQ(500,400);
-    GPU_V1 *v1 = new GPU_V1();
-    v1->process_segments(listSegments, pointQ);
+//     ofVec2f pointQ(500,400);
+//     GPU_V1 *v1 = new GPU_V1();
+//     v1->process_segments(listSegments, pointQ);
     return 0;
 }
 
