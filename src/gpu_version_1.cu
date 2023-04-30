@@ -702,11 +702,20 @@ void test_preprocessing() {
     double timeCpu = 0.00;
     vector<segment> updated_segments;
     for(int i=0; i<iteration; i++){
-        time_t start = time(NULL);
+        // time_t start = time(NULL);
+        // updated_segments = gpu->preprocess(listSegments, pointQ);
+        // time_t end = time(NULL);
+        // double duration = double(end-start);
+        // timeCpu = timeCpu + duration;
+        
+        auto begin = chrono::high_resolution_clock::now();    
         updated_segments = gpu->preprocess(listSegments, pointQ);
-        time_t end = time(NULL);
-        double duration = double(end-start);
-        timeCpu = timeCpu + duration;
+        auto end = chrono::high_resolution_clock::now();    
+        auto dur = end - begin;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+        timeCpu = timeCpu + ms;
+
+        
     }
     cout.precision(17);
     cout << fixed << "\n Preprocessing in GPU: " << timeCpu/iteration<<endl;
@@ -719,22 +728,18 @@ void test_preprocessing() {
     
     timeCpu = 0.00;
     for(int i=0; i<iteration; i++){
-        time_t start = time(NULL);
+        auto begin = chrono::high_resolution_clock::now();    
         gpu->mergeVraysGpu(initial_vrays);
-        time_t end = time(NULL);
-        double duration = double(end-start);
-        timeCpu = timeCpu + duration;
+        auto end = chrono::high_resolution_clock::now();    
+        auto dur = end - begin;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+        timeCpu = timeCpu + ms;
     }
     cout.precision(17);
     cout << fixed << "\n Merge Sequential time in GPU: " << timeCpu/iteration<<endl;
     
 
-    auto begin = chrono::high_resolution_clock::now();    
-    int x;
-    cin >> x;      // wait for user input
-    auto end = chrono::high_resolution_clock::now();    
-    auto dur = end - begin;
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+    
     cout<<ms<<endl;
     // vector<int> all_time;
     
