@@ -293,7 +293,7 @@ vector<segment> generateSegments(int n){
 void test_performance() {
 
     vector<segment> listSegments = generateSegments(500);
-    
+
     ofApp ofAppNew;
     ofVec2f pointQ(500,400);
     ofAppNew.q = pointQ;
@@ -315,7 +315,7 @@ void test_performance() {
         auto end = chrono::high_resolution_clock::now();    
         auto dur = end - begin;
         auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-        cout<<ms<<endl;
+        
         timeCpu = timeCpu + ms;
 
         
