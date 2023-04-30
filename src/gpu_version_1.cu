@@ -343,14 +343,14 @@ __device__ void mergeVraysGpu(vray *l1, vray *l2, vray *retVray, int mEach){
 
             segment other(ofVec2f(0.0f, 0.0f, 0), ofVec2f(infinity * cos(thetaRad), infinity * sin(thetaRad), 0), 0); // x axis as segment
             ofVec2f p = s.intersectionWithGivenSegment(other);
-           if(p.x == 0.0 && p.y == 0.0){
-            //    cout << "\n point" << p.x << " " << p.y ;
-               printf("\n it is null - did not find an intersection ");
-           }
-           else{
-            //    cout << "\n it is null - did not find an intersection ";
-                printf("\n point %f, %f", p.x, p.y);
-           }
+        //    if(p.x == 0.0 && p.y == 0.0){
+        //     //    cout << "\n point" << p.x << " " << p.y ;
+        //        printf("\n it is null - did not find an intersection ");
+        //    }
+        //    else{
+        //     //    cout << "\n it is null - did not find an intersection ";
+        //         printf("\n point %f, %f", p.x, p.y);
+        //    }
             
 
             retVray[i].l = min(retVray[i].l, p.lengthGpu());
@@ -441,10 +441,10 @@ __global__ void merge_in_parallel(vray *input_vrays, int size, vray *output_vray
 
      if (tid < size){
         for(int m=4; m < 2*size ; m = m * 2){ 
-            printf("\n m:%d", m);
+            // printf("\n m:%d", m);
             if(tid%m == 0){ // merge 4 vrays here 
-                printf("\n m=%d, tid:%d, it is vray0", m, tid);
-                printf("\n \t %d, %d", tid, tid + (m/2));
+                // printf("\n m=%d, tid:%d, it is vray0", m, tid);
+                // printf("\n \t %d, %d", tid, tid + (m/2));
                 vray *v1 = &input_vrays[tid];
                 vray *v2 = &input_vrays[tid+(m/2)];
                 vray *res = &output_vrays[tid];
@@ -464,7 +464,7 @@ __global__ void generate_vrays_in_parallel(segment* input, int size, vray* outpu
  
     int tid = threadIdx.x;
     if(tid < size) {
-        printf("Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
+        // printf("Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
         // vector<vray> segVrays = input[tid].generateVray(input[tid]);
         // output[2 * tid] = segVrays.at(0);
         // output[2 * tid + 1] = segVrays.at(1);
@@ -659,9 +659,9 @@ class GPU_V1 {
         // }
 
         vector<vray> merged_vrays;
-        std::cout<<"\n Starting merge vrays"<<std::endl;
+        // std::cout<<"\n Starting merge vrays"<<std::endl;
         vray *merged_vrayssss = this->mergeVraysGpu(initial_vrays);
-        std::cout<<"\n Ending merge"<<std::endl;
+        // std::cout<<"\n Ending merge"<<std::endl;
         // for(int i=0; i<initial_vrays.size(); i++){
         //     printf("i: %d, .theta: %f\n", i, merged_vrayssss[i].theta);
         // }
@@ -768,6 +768,7 @@ int main() {
 
     //TEST Preprocessing
     // std::cout<<"Time taken For Preprocessing in GPU: ";//<< test_preprocessing() <<std::endl;
+    cout<<"Testing"<<endl;
     test_preprocessing();
 
 //     vector<segment> listSegments = {
