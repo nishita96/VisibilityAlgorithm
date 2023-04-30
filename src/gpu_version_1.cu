@@ -718,7 +718,7 @@ void test_preprocessing() {
         
     }
     cout.precision(17);
-    cout << fixed << "\n Preprocessing in GPU: " << timeCpu/iteration<<endl;
+    cout << fixed << "\n Preprocessing in GPU: " << timeCpu<<endl;
     
     
     vector<vray> initial_vrays;
@@ -738,7 +738,7 @@ void test_preprocessing() {
         timeCpu = timeCpu + ms;
     }
     cout.precision(17);
-    cout << fixed << "\n Merge Sequential time in GPU: " << timeCpu/iteration<<endl;
+    cout << fixed << "\n Merge Sequential time in GPU: " << timeCpu<<endl;
     
 
     
