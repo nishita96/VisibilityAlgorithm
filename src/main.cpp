@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-
+#include <ctime>
 #include "ofApp.h"
 #include "segment.hpp"
 #include "vray.hpp"
@@ -132,19 +132,19 @@ vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2){
 }
 
 void printAllSegments(vector<segment> listSegments){
-    cout << "\n DISPLAYING ALL SEGMENTS";
-    for (auto seg: listSegments){
-        cout << "\n seg (" << seg.p0.x << ", " << seg.p0.y << "), (" << seg.p1.x << ", " << seg.p1.y << ") ";
-    }
-    cout << "\n";
+    // cout << "\n DISPLAYING ALL SEGMENTS";
+    // for (auto seg: listSegments){
+    //     cout << "\n seg (" << seg.p0.x << ", " << seg.p0.y << "), (" << seg.p1.x << ", " << seg.p1.y << ") ";
+    // }
+    // cout << "\n";
 }
 
 void printAllVrays(vector<vray> vrays){
-    cout << "\n DISPLAY VRAYS";
-    for (auto ray : vrays) {
-        cout << "\n theta:" << ray.theta << ", unitvec(" << ray.unitVec.x << "," << ray.unitVec.y << "), r:" << ray.r << ", l:" << ray.l ;
-    }
-    cout << "\n";
+    // cout << "\n DISPLAY VRAYS";
+    // for (auto ray : vrays) {
+    //     cout << "\n theta:" << ray.theta << ", unitvec(" << ray.unitVec.x << "," << ray.unitVec.y << "), r:" << ray.r << ", l:" << ray.l ;
+    // }
+    // cout << "\n";
 }
 
 bool myComparator(vray a, vray b){
@@ -329,12 +329,13 @@ int main( ){
     int iteration = 500;
     double timeCpu = 0.00;
     for(int i=0; i<iteration; i++){
-        clock_t begin = clock();
+        time_t start = time(NULL);
 
         ofAppNew.doPreprocessing();
 
-        clock_t end = clock();
-        double duration = double(end-begin) / CLOCKS_PER_SEC;
+        time_t end = time(NULL);
+        // double duration = double(end-begin) / CLOCKS_PER_SEC;
+        double duration = double(end-start);
         timeCpu = timeCpu + duration;
     }
     cout.precision(17);
@@ -344,12 +345,13 @@ int main( ){
 
     timeCpu = 0.00;
     for(int i=0; i<iteration; i++){
-        clock_t begin = clock();
+        time_t start = time(NULL);
 
-        ofAppNew.mergeSequantially(9999);
+        ofAppNew.mergeSequantially();
 
-        clock_t end = clock();
-        double duration = double(end-begin) / CLOCKS_PER_SEC;
+        time_t end = time(NULL);
+        // double duration = double(end-begin) / CLOCKS_PER_SEC;
+        double duration = double(end-start);
         timeCpu = timeCpu + duration;
     }
     cout.precision(17);
