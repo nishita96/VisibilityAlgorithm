@@ -692,11 +692,6 @@ vector<segment> generateSegments(int n){
 
 void test_preprocessing() {
 
-    vector<int> all_time;
-    int iteration = 500;
-    double timeDuration = 0.0;
-
-    
     vector<segment> listSegments = generateSegments(iteration);
     ofVec2f pointQ(500,400);
 
@@ -708,13 +703,11 @@ void test_preprocessing() {
         time_t start = time(NULL);
         updated_segments = gpu->preprocess(listSegments, pointQ);
         time_t end = time(NULL);
-        // double duration = double(end-begin) / CLOCKS_PER_SEC;
         double duration = double(end-start);
         timeCpu = timeCpu + duration;
     }
     cout.precision(17);
     cout << fixed << "\n Preprocessing in GPU: " << timeCpu/iteration;
-
     vector<vray> initial_vrays;
     for(int i =0; i<updated_segments.size(); i++){
         segment s = updated_segments.at(i);
@@ -725,17 +718,19 @@ void test_preprocessing() {
     timeCpu = 0.00;
     for(int i=0; i<iteration; i++){
         time_t start = time(NULL);
-
         gpu->mergeVraysGpu(initial_vrays);
-
         time_t end = time(NULL);
-        // double duration = double(end-begin) / CLOCKS_PER_SEC;
         double duration = double(end-start);
         timeCpu = timeCpu + duration;
     }
     cout.precision(17);
     cout << fixed << "\n Merge Sequential time in GPU: " << timeCpu/iteration;
     
+
+
+    // vector<int> all_time;
+    
+    // double timeDuration = 0.0;
     // for(int i=0;i<iteration;i++) {
     // //     vector<segment> listSegments = {
     // //         segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
