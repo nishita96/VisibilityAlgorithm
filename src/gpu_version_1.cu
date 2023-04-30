@@ -7,6 +7,7 @@
 #include <iostream>
 // #include "ofMain.h"
 #include <ctime>
+#include <cmath>
 
 #define PI 3.14
 
@@ -25,29 +26,60 @@ public:
         y = _y;
     }
 
+    __device__ ofVec2f(ofVec2f of, int c) {
+        x = of.x;
+        y = of.y;
+    }
+
     __device__ void set(float _x, float _y) {
         x = _x;
         y = _y;
     }
 
     float angle(ofVec2f v1) {
-        return 0;
+        float dotProduct = 0.0;
+        float normA = 0.0;
+        float normB = 0.0;
+
+        dotProduct = x*v1.x + y*v1.y; // += a[i] * b[i];
+        normA = x*x + y*y; // += a[i] * a[i];
+        normB = v1.x*v1.x + v1.y*v1.y; // += b[i] * b[i];
+
+
+        normA = sqrt(normA);
+        normB = sqrt(normB);
+
+        float cosTheta = dotProduct / (normA * normB);
+        float theta = acos(cosTheta);
+
+        float crossProduct = x*v1.y + y*v1.x; //a[0]*b[1] - a[1]*b[0]; 
+        if (crossProduct < 0) {
+            theta = -theta; // adjust theta if cross product is negative
+        }
+        theta = theta * 180 / M_PI;
+        return theta;
     }
+    
     float length() {
         return sqrt(x*x + y*y);
     }
 
-     ofVec2f getNormalized() {
+    __device__ float lengthGpu() {
+        return sqrt(x*x + y*y);
+    }
+
+    ofVec2f getNormalized() {
         ofVec2f new_vec(x, y);
         return new_vec;
     }
 
-     ofVec2f operator*(float scale) {
+    __device__ ofVec2f operator*(float scale) {
         ofVec2f vec(1,1);
         vec.x = this->x * scale;
         vec.y = this->y * scale;
         return vec;
     }
+
 };
 
 // __device__ ofVec2f* create_ofvec_obj(int x, int y) {
@@ -62,6 +94,9 @@ class vray {
 public:
     vray(float _theta, ofVec2f _unitVec, float _r, float _l) :
         theta(_theta), unitVec(_unitVec.x, _unitVec.y), r(_r), l(_l) {}
+    __device__ vray(float _theta, ofVec2f _unitVec, float _r, float _l, int n) :
+        theta(_theta), unitVec(_unitVec.x, _unitVec.y), r(_r), l(_l) {}
+        
     // vray(float _theta, float _r, float _l) :
     //     theta(_theta), r(_r), l(_l) {}
     
@@ -92,9 +127,9 @@ public:
     }
     __device__ bool possibleIntersectionTestXAxis();
     __device__ ofVec2f splitSegmentInto2();
-     ofVec2f intersectionWithGivenSegment(segment other);
+    __device__ ofVec2f intersectionWithGivenSegment(segment other);
      __device__ bool collinearWithQ(); // q is always 0 after translation
-     vector<vray> generateVray(segment seg);
+    vector<vray> generateVray(segment seg);
 };
 
 
@@ -155,7 +190,7 @@ __device__ bool segment::possibleIntersectionTestXAxis(){
 }
 
 
-ofVec2f segment::intersectionWithGivenSegment(segment other){
+__device__ ofVec2f segment::intersectionWithGivenSegment(segment other){
     // TODO: Implement A Fast Method To Find The Edge Intersection Point.
     // Should return the intersection point or null, if no intersection exists.
     //  Care should be taken to make the implementation CORRECT, but SPEED MATTERS.
@@ -176,10 +211,10 @@ ofVec2f segment::intersectionWithGivenSegment(segment other){
         if(0 < t && t < 1){ // does not take the end points
              float pointX = p0x + ((p1x - p0x) * t);
              float pointY = p0y + ((p1y - p0y) * t);
-             return ofVec2f(pointX, pointY);
+             return ofVec2f(pointX, pointY, 0);
         }
     }
-    return ofVec2f(0.0f, 0.0f); // if no intersection THEN returned point has x<0, TODO how to pass null
+    return ofVec2f(0.0f, 0.0f,0); // if no intersection THEN returned point has x<0, TODO how to pass null
 }
 
 
@@ -192,6 +227,7 @@ vector<vray> segment::generateVray(segment seg){
     vector<vray> bothVray;
     ofVec2f xAxisVec(1.0,0.0);
     float infinity = 9999.0f;
+    // printf("\n inside s.p0.x: %f, s.p0.y: %f, s.p1.x: %f, s.p1.y: %f", seg.p0.x, seg.p0.y, seg.p1.x, seg.p1.y);
     
     if((seg.p0.x * seg.p1.y - seg.p0.y * seg.p1.x) < 0){ // p0 X p1
         // to ensure p0 theta < p1 theta
@@ -207,10 +243,137 @@ vector<vray> segment::generateVray(segment seg){
     }
     theta0 = theta0 < 0? theta0 + 360.0f : theta0;
     theta1 = theta1 < 0? theta1 + 360.0f : theta1;
+    // cout << "\n thetas" << theta0 << " " << theta1 ;
     bothVray.push_back(vray(theta0, seg.p0.getNormalized(), infinity, seg.p0.length()));
     bothVray.push_back(vray(theta1, seg.p1.getNormalized(), seg.p1.length(), infinity));
     
     return bothVray;
+}
+
+__device__ void mergeVraysGpu(vray *l1, vray *l2, vray *retVray, int mEach){
+    float infinity = 99999.0;
+    // vector<vray> l;
+    // vray *l;
+    // cudaMalloc(&l, 10 * sizeof(vray));
+
+    // ofVec2f ofV(0.0f, 0.0f, 0);
+    // vray *l = {vray(0.0, ofV, 0.0, 0.0, 0)};
+    // printf("\n l1[0].theta:%f, l2[0].theta:%f, m:%d", l1[0].theta, l2[0].theta, m);
+    
+    // int n = l1.size() + l2.size();
+    // int n1 = l1.size();
+    // int n2 = l2.size();
+    int n = mEach * 2;
+    int n1 = mEach;
+    int n2 = mEach; //TODO check results
+    
+    // int i = 0; // diff from paper
+    // int i1 = 0;
+    // int i2 = 0;
+    // int k = 0;
+    // int t = 0;
+    int i = 0; // diff from paper
+    int i1 = 0;
+    int i2 = 0;
+    int k = 0;
+    int t = 0;
+    
+    // vector<vray> lk;
+    // vector<vray> lt;
+    // int ik=0;
+    // int it=0;
+    vray *lk;
+    vray *lt;
+    int ik=0;
+    int it=0;
+
+    int pushCnt = 0;
+    
+
+    while(i < n){
+        if(i2 >= n2){
+            k = 1;
+            ik = i1;
+            lk = l1;
+            t = 2;
+            it = i2;
+            lt = l2;
+        }
+        else if(i1 >= n1){
+            k = 2;
+            ik = i2;
+            lk = l2;
+            t = 1;
+            it = i1;
+            lt = l1;
+        }
+        else if(l1[i1].theta <= l2[i2].theta){
+            k = 1;
+            ik = i1;
+            lk = l1;
+            t = 2;
+            it = i2;
+            lt = l2;
+        }
+        else{
+            k = 2;
+            ik = i2;
+            lk = l2;
+            t = 1;
+            it = i1;
+            lt = l1;
+        }
+
+//         l.push_back(lk.at(ik));
+        retVray[i] = lk[ik];
+        pushCnt++;
+
+        if(0 < it && it < mEach && lt[it].r < infinity ){
+            float ox = lt[it-1].unitVec.x * lt[it-1].l;
+            float oy = lt[it-1].unitVec.y * lt[it-1].l;
+            ofVec2f o1(ox, oy, 0);
+            ox = lt[it].unitVec.x * lt[it].r;
+            oy = lt[it].unitVec.y * lt[it].r;
+            ofVec2f o2(ox, oy, 0);
+            segment s(o1, o2, 0);
+
+            float thetaRad = retVray[i].theta * PI / 180.0;
+
+
+
+            segment other(ofVec2f(0.0f, 0.0f, 0), ofVec2f(infinity * cos(thetaRad), infinity * sin(thetaRad), 0), 0); // x axis as segment
+            ofVec2f p = s.intersectionWithGivenSegment(other);
+           if(p.x == 0.0 && p.y == 0.0){
+            //    cout << "\n point" << p.x << " " << p.y ;
+               printf("\n it is null - did not find an intersection ");
+           }
+           else{
+            //    cout << "\n it is null - did not find an intersection ";
+                printf("\n point %f, %f", p.x, p.y);
+           }
+            
+
+            retVray[i].l = min(retVray[i].l, p.lengthGpu());
+            retVray[i].r = min(retVray[i].r, p.lengthGpu());
+        }
+
+        if(k == 1){
+            i1 = i1 + 1; // can assign k = i1 or i2 initially based on condition so that we  have to chec value of k again n again
+        }
+        else{
+            i2 = i2 + 1;
+        }
+        i = i + 1;
+    }
+    
+    // l1 = retVray
+
+    for(int i=0; i<mEach; i++){
+        l1[i] = retVray[i];
+    }
+
+    // return l;
+    return;
 }
 
 __global__ void preprocess_in_parallel(segment* input, int size, int x, int y, segment* output) {
@@ -246,149 +409,70 @@ __global__ void preprocess_in_parallel(segment* input, int size, int x, int y, s
     }
 }
 
-class GPU_V1 {
-    float infinity = 9999.0f;
-    // vector<segment> check_intersections(vector<segment>& segments) {
-    //     vector<segment> listSegmentsCopy;
-    //     for (auto seg: segments){
-    //         if(seg.possibleIntersectionTestXAxis()){
-    //             ofVec2f splitPoint = seg.splitSegmentInto2();
-    //             if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
-    //                 // TODO check if you need to check which has smaller angle
-    //                 listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
-    //                 listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
-    //             }
-    //             else{
-    //                 listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-    //             }
+__global__ void merge_in_parallel(vray *input_vrays, int size, vray *output_vrays){
+    // shared memory 
+    // extern __shared__ vray vrayData[];
+  
+    int tid = threadIdx.x;
+
+    int n = 4;
+
+    // if (tid < size){
+    //     for(int m=4; m <= blockDim.x ; m = m * 2){
+    //         printf("\n m:%d", m);
+    //         if(tid%m == 0){ // merge 4 vrays here 
+    //             printf("\n m=%d, tid:%d, it is vray0", m, tid);
+    //             printf("\n \t %d, %d", tid, tid + (m/2));
+    //             vray *v1 = &input_vrays[tid];
+    //             vray *v2 = &input_vrays[tid+(m/2)];
+    //             vray *res = &output_vrays[tid];
+    //             // mergeVraysGpu(v1, v2, res, m);
+
     //         }
-    //         else{
-    //             listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-    //         }
+    //         // else{
+    //             // printf("\n m=%d, tid:%d, it is other vray", m, tid);
+    //             // do nothing 
+    //         // }
+
+    //         __syncthreads();
+    //         //TODO kill the thread not required?
     //     }
-    //     return listSegmentsCopy;
     // }
 
-    vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2){
-        vector<vray> l;
-        
-        int n = l1.size() + l2.size();
-        int n1 = l1.size();
-        int n2 = l2.size();
-    //    cout <<  "\n size l1:" << l1.size() << " l2:" << l2.size() << " l:" << l.size();
-    //    cout << "\n l1";
-    //    printAllVrays(l1);
-    //    cout << "\n l2";
-    //    printAllVrays(l2);
-        
-        int i = 0; // diff from paper
-        int i1 = 0;
-        int i2 = 0;
-        int k = 0;
-        int t = 0;
-        
-        vector<vray> lk;
-        vector<vray> lt;
-        int ik=0;
-        int it=0;
-        
+     if (tid < size){
+        for(int m=4; m < 2*size ; m = m * 2){ 
+            printf("\n m:%d", m);
+            if(tid%m == 0){ // merge 4 vrays here 
+                printf("\n m=%d, tid:%d, it is vray0", m, tid);
+                printf("\n \t %d, %d", tid, tid + (m/2));
+                vray *v1 = &input_vrays[tid];
+                vray *v2 = &input_vrays[tid+(m/2)];
+                vray *res = &output_vrays[tid];
 
-        while(i < n){
-            if(i2 >= n2){
-                k = 1;
-                ik = i1;
-                lk = l1;
-                t = 2;
-                it = i2;
-                lt = l2;
-            }
-            else if(i1 >= n1){
-                k = 2;
-                ik = i2;
-                lk = l2;
-                t = 1;
-                it = i1;
-                lt = l1;
-            }
-            else if(l1.at(i1).theta <= l2.at(i2).theta){
-                k = 1;
-                ik = i1;
-                lk = l1;
-                t = 2;
-                it = i2;
-                lt = l2;
-            }
-            else{
-                k = 2;
-                ik = i2;
-                lk = l2;
-                t = 1;
-                it = i1;
-                lt = l1;
+                mergeVraysGpu(v1, v2, res, m);
+
             }
 
-            l.push_back(lk.at(ik));
-
-            if(0 < it && it < lt.size() && lt.at(it).r < infinity ){
-                segment s = segment(lt.at(it-1).unitVec * lt.at(it-1).l, lt.at(it).unitVec * lt.at(it).r);
-                float thetaRad = l.at(i).theta * PI / 180.0;
-                segment other(ofVec2f(0.0f, 0.0f), ofVec2f(1500.0f * cos(thetaRad), 1500.0f * sin(thetaRad))); // x axis as segment
-                ofVec2f p = s.intersectionWithGivenSegment(other);
-    //            if(p != ofVec2f(0.0f, 0.0f)){
-    //                cout << "\n point" << p.x << " " << p.y ;
-    //            }
-    //            else{
-    //                cout << "\n it is null - did not find an intersection ";
-    //            }
-                
-
-                l.at(i).l = min(l.at(i).l, p.length());
-                l.at(i).r = min(l.at(i).r, p.length());
-            }
-
-            if(k == 1){
-                i1 = i1 + 1; // can assign k = i1 or i2 initially based on condition so that we  have to chec value of k again n again
-            }
-            else{
-                i2 = i2 + 1;
-            }
-            i = i + 1;
+            __syncthreads();
+            //TODO kill the thread not required?
         }
-        
-    //    cout << "\n l";
-    //    printAllVrays(l);
-        return l;
     }
 
-    vector<vray> merge(vector<segment>& listSegmentsCopy) {
-        
-        int minValueR = 9999.0f;
-        vector<vray> vrayForMerge;
-        vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(0));
-        vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(1));
-        if(vrayForMerge.at(0).theta == 360.0f && vrayForMerge.at(0).r < minValueR){
-            minValueR = vrayForMerge.at(0).r;
-        }
-        if(vrayForMerge.at(1).theta == 360.0f && vrayForMerge.at(1).r < minValueR){
-            minValueR = vrayForMerge.at(1).r;
-        }
-        vector<vray> vrayNewPair;
-        for (int i=1; i<listSegmentsCopy.size(); i++){
-            segment seg = listSegmentsCopy.at(i);
-            vrayNewPair.clear();
-            vrayNewPair.push_back(seg.generateVray(seg).at(0));
-            vrayNewPair.push_back(seg.generateVray(seg).at(1));
-            if(vrayNewPair.at(0).theta == 360.0f && vrayNewPair.at(0).r < minValueR){
-                minValueR = vrayNewPair.at(0).r;
-            }
-            if(vrayNewPair.at(1).theta == 360.0f && vrayNewPair.at(1).r < minValueR){
-                minValueR = vrayNewPair.at(1).r;
-            }
-            vrayForMerge = mergeVrays(vrayForMerge, vrayNewPair);
-        }
-        vrayForMerge.push_back(vray(360.0, ofVec2f(1.0f, 0.0f), minValueR, infinity));
-        return vrayForMerge;
+}
+
+__global__ void generate_vrays_in_parallel(segment* input, int size, vray* output) {
+ 
+    int tid = threadIdx.x;
+    if(tid < size) {
+        printf("Id: %d, po.x: %f p1.x: %f\n", tid, input[tid].p0.x, input[tid].p1.x);
+        // vector<vray> segVrays = input[tid].generateVray(input[tid]);
+        // output[2 * tid] = segVrays.at(0);
+        // output[2 * tid + 1] = segVrays.at(1);
     }
+}
+
+class GPU_V1 {
+    float infinity = 9999.0f;
 
     public:
 
@@ -438,14 +522,149 @@ class GPU_V1 {
 
     }
 
+    vector<vray> generate_vrays_from_segments(vector<segment>& segments) {
+            
+        cudaError_t err = cudaSuccess;
+
+        segment *d_segments;
+        cudaMalloc(&d_segments, segments.size() * sizeof(segment));
+
+        err = cudaMemcpy(d_segments, segments.data(), segments.size() * sizeof(segment), cudaMemcpyHostToDevice);
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
+
+        vray *d_output_vrays;
+        cudaMalloc(&d_output_vrays, 2 * segments.size() * sizeof(vray));
+
+        int threadsPerBlock = 100;
+        int blocksPerGrid = 1;
+        generate_vrays_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_segments, segments.size(), d_output_vrays);
+        cudaDeviceSynchronize();
+        err = cudaGetLastError();
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to launch generate_vrays_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
+
+        vray* gpu_generated_vrays = (vray*) malloc(sizeof(vray) * 2 * segments.size());
+        err = cudaMemcpy(gpu_generated_vrays, d_output_vrays, 2 * segments.size() * sizeof(vray), cudaMemcpyDeviceToHost);
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to copy d_output_vrays kernel (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
+        vector<vray> generated_vrays;
+        for(int i=0;i<2*segments.size();i++) {
+            cout << " " << gpu_generated_vrays[i].theta ;
+                generated_vrays.push_back(gpu_generated_vrays[i]);
+        }
+        cudaFree(d_output_vrays);
+        cudaFree(d_segments);
+        return generated_vrays;
+
+    }
+
+    vray* mergeVraysGpu(vector<vray>& initial_vray_list){
+        cout << "\n do";
+        vector<vray> ret;
+
+  
+        // cudaError_t err = cudaSuccess;
+
+        // segment *d_segments;
+        // cudaMalloc(&d_segments, segments.size() * sizeof(segment));
+
+        // err = cudaMemcpy(d_segments, segments.data(), segments.size() * sizeof(segment), cudaMemcpyHostToDevice);
+        // if (err != cudaSuccess)
+        // {
+        //     fprintf(stderr, "Failed to allocate d_segments (error code %s)!\n", cudaGetErrorString(err));
+        //     exit(EXIT_FAILURE);
+        // }
+
+        cudaError_t err = cudaSuccess;
+
+        vray *d_vrays;
+        cudaMalloc(&d_vrays, initial_vray_list.size() * sizeof(vray));
+
+        err = cudaMemcpy(d_vrays, initial_vray_list.data(), initial_vray_list.size() * sizeof(vray), cudaMemcpyHostToDevice);
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to allocate d_vrays (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
+
+        // segment *d_output_segments;
+        // cudaMalloc(&d_output_segments, 2 * segments.size() * sizeof(segment));
+
+        vray *d_output_vrays;
+        cudaMalloc(&d_output_vrays, initial_vray_list.size() * sizeof(vray));
+
+        // int threadsPerBlock = 100;
+        // int blocksPerGrid = 1;
+        int threadsPerBlock = 16;
+        int blocksPerGrid = 1;
+        merge_in_parallel <<<blocksPerGrid, threadsPerBlock>>> (d_vrays, initial_vray_list.size(), d_output_vrays);
+        cudaDeviceSynchronize();
+        err = cudaGetLastError();
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
+        vray* return_vrays = (vray*) malloc(sizeof(vray) * initial_vray_list.size());
+        err = cudaMemcpy(return_vrays, d_output_vrays, initial_vray_list.size() * sizeof(vray), cudaMemcpyDeviceToHost);
+        if (err != cudaSuccess)
+        {
+            fprintf(stderr, "Failed to copy d_output_segments kernel (error code %s)!\n", cudaGetErrorString(err));
+            exit(EXIT_FAILURE);
+        }
+        // vector<segment> filtered_segments;
+        // for(int i=0;i<2*segments.size();i++) {
+        //     if(preprocessed_segments[i].isValid) {
+        //         filtered_segments.push_back(preprocessed_segments[i]);
+        //     }
+        // }
+        cudaFree(d_output_vrays);
+        cudaFree(d_vrays);
+        return return_vrays;
+
+    }
+
     virtual vector<vray> process_segments(vector<segment> segments, ofVec2f& q) {
         // start = 0;
-        std::cout<<"Starting Process"<<std::endl;
+        std::cout<<"\n Starting Preprocess, size: "<< segments.size() <<std::endl;
         vector<segment> updated_segments = this->preprocess(segments, q);
-        std::cout<<"Preprocess complete: "<< updated_segments.size() <<std::endl;
+        std::cout<<"\n Preprocess complete, size: "<< updated_segments.size() <<std::endl;
+
+        // for(int i=0; i<updated_segments.size(); i++){
+        //     printf("Id: %d, p0.x: %f p0.y: %f, p1.x: %fp1.y: %f\n", i, updated_segments.at(i).p0.x, updated_segments.at(i).p0.y, updated_segments.at(i).p1.x, updated_segments.at(i).p1.y);
+        // }
+
+        std::cout<<"\n Starting generate vrays"<<std::endl;
+        vector<vray> initial_vrays;// = this->generate_vrays_from_segments(updated_segments);
+        for(int i =0; i<updated_segments.size(); i++){
+            segment s = updated_segments.at(i);
+            // printf("i: %d, s.p0.x: %f, s.p0.y: %f, s.p1.x: %f, s.p1.y: %f\n", i, s.p0.x, s.p0.y, s.p1.x, s.p1.y);
+            initial_vrays.push_back(s.generateVray(s).at(0));
+            initial_vrays.push_back(s.generateVray(s).at(1));
+            // printf("i: %d, .theta: %f\n", i, s.generateVray(s).at(0).theta);
+        }
+        std::cout<<"\n End of generate vrays, size: "<< initial_vrays.size() << std::endl;
+        // for(int i=0; i<initial_vrays.size(); i++){
+        //     printf("i: %d, .theta: %f\n", i, initial_vrays.at(i).theta);
+        // }
+
         vector<vray> merged_vrays;
-        // vector<vray> merged_vrays = this->merge(updated_segments);
-        // std::cout<<"Ending Process"<<std::endl;
+        std::cout<<"\n Starting merge vrays"<<std::endl;
+        vray *merged_vrayssss = this->mergeVraysGpu(initial_vrays);
+        std::cout<<"\n Ending merge"<<std::endl;
+        // for(int i=0; i<initial_vrays.size(); i++){
+        //     printf("i: %d, .theta: %f\n", i, merged_vrayssss[i].theta);
+        // }
         // end = 0;
         return merged_vrays;
     }
@@ -502,6 +721,7 @@ int main() {
 //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
     };
+    
     ofVec2f pointQ(500,400);
     GPU_V1 *v1 = new GPU_V1();
     v1->process_segments(listSegments, pointQ);
