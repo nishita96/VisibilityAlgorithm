@@ -612,14 +612,14 @@ class GPU_V1 {
         err = cudaGetLastError();
         if (err != cudaSuccess)
         {
-            fprintf(stderr, "Failed to launch preprocess_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
+            fprintf(stderr, "Failed to launch merge_in_parallel kernel (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
         vray* return_vrays = (vray*) malloc(sizeof(vray) * initial_vray_list.size());
         err = cudaMemcpy(return_vrays, d_output_vrays, initial_vray_list.size() * sizeof(vray), cudaMemcpyDeviceToHost);
         if (err != cudaSuccess)
         {
-            fprintf(stderr, "Failed to copy d_output_segments kernel (error code %s)!\n", cudaGetErrorString(err));
+            fprintf(stderr, "Failed to copy d_output_vrays kernel (error code %s)!\n", cudaGetErrorString(err));
             exit(EXIT_FAILURE);
         }
         // vector<segment> filtered_segments;
