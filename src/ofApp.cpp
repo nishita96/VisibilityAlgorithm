@@ -250,8 +250,8 @@ void ofApp::doPreprocessing(){
             listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
         }
     }
-    sleep(5);
-    cout<<"Size of segments: "<<setOfSegments.size()<<endl;
+    
+    // cout<<"Size of segments: "<<setOfSegments.size()<<endl;
 }
 
 void ofApp::doEverything(){
