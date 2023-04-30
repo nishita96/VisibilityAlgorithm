@@ -289,73 +289,126 @@ vector<segment> generateSegments(int n){
     return ret;
 }
 
-int main( ){
 
-    // test_preprocessing();
+void test_performance() {
 
-
-    // do all processing
-    
+    vector<segment> listSegments = generateSegments(100);
     ofApp ofAppNew;
-    
-    
-    
-    // ISSUE the lines have to be non intersecting - how to generate them dynamically?
-    
-    // ---- define the point Q
-    ofVec2f pointQ(500,400); //= ofGetWindowSize() / 2;
+    ofVec2f pointQ(500,400);
     ofAppNew.q = pointQ;
-
-    int numSegments = 1000;
-    vector<segment> listSegmentsGenerated = generateSegments(numSegments);
-    
-    // ---- made a set of segments covering cases
-    vector<segment> listSegments = listSegmentsGenerated; //= {
-        // segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
-        // segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
-        // segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-        // segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-        // segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
-
-// //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
-//         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
-//     };
-    
-    // ---- add segments to draw
     ofAppNew.setOfSegmentsOriginal = listSegments;
     ofAppNew.setOfSegmentsToDraw = listSegments;
     ofAppNew.setOfSegments = listSegments;
 
     int iteration = 500;
+    
+    
+
+    // GPU_V1 *gpu = new GPU_V1();
+    
     double timeCpu = 0.00;
+    vector<segment> updated_segments;
     for(int i=0; i<iteration; i++){
-        time_t start = time(NULL);
+        auto begin = chrono::high_resolution_clock::now();    
+        updated_segments = ofAppNew.doPreprocessing();
+        auto end = chrono::high_resolution_clock::now();    
+        auto dur = end - begin;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+        timeCpu = timeCpu + ms;
 
-        ofAppNew.doPreprocessing();
-
-        time_t end = time(NULL);
-        // double duration = double(end-begin) / CLOCKS_PER_SEC;
-        double duration = double(end-start);
-        timeCpu = timeCpu + duration;
+        
     }
     cout.precision(17);
-    cout << fixed << "\n Preprocessing in CPU: " << timeCpu/iteration;
+    cout << fixed << "\n Preprocessing in GPU: " << timeCpu<<endl;
 
-
-
+    // vector<vray> initial_vrays;
+    // for(int i =0; i<updated_segments.size(); i++){
+    //     segment s = updated_segments.at(i);
+    //     initial_vrays.push_back(s.generateVray(s).at(0));
+    //     initial_vrays.push_back(s.generateVray(s).at(1));
+    // }
+    
     timeCpu = 0.00;
     for(int i=0; i<iteration; i++){
-        time_t start = time(NULL);
-
+        auto begin = chrono::high_resolution_clock::now();    
         ofAppNew.mergeSequantially(9999.0);
-
-        time_t end = time(NULL);
-        // double duration = double(end-begin) / CLOCKS_PER_SEC;
-        double duration = double(end-start);
-        timeCpu = timeCpu + duration;
+        auto end = chrono::high_resolution_clock::now();    
+        auto dur = end - begin;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+        timeCpu = timeCpu + ms;
     }
     cout.precision(17);
-    cout << fixed << "\n Merge Sequential time in CPU: " << timeCpu/iteration;
+    cout << fixed << "\n Merge Sequential time in GPU: " << timeCpu<<endl;
+}
+
+int main( ){
+
+    test_performance();
+    // test_preprocessing();
+
+
+    // do all processing
+    
+//     ofApp ofAppNew;
+    
+    
+    
+//     // ISSUE the lines have to be non intersecting - how to generate them dynamically?
+    
+//     // ---- define the point Q
+//     ofVec2f pointQ(500,400); //= ofGetWindowSize() / 2;
+//     ofAppNew.q = pointQ;
+
+//     int numSegments = 1000;
+//     vector<segment> listSegmentsGenerated = generateSegments(numSegments);
+    
+//     // ---- made a set of segments covering cases
+//     vector<segment> listSegments = listSegmentsGenerated; //= {
+//         // segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+//         // segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+//         // segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+//         // segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+//         // segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+
+// // //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+// //         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+// //     };
+    
+//     // ---- add segments to draw
+//     ofAppNew.setOfSegmentsOriginal = listSegments;
+//     ofAppNew.setOfSegmentsToDraw = listSegments;
+//     ofAppNew.setOfSegments = listSegments;
+
+//     int iteration = 500;
+//     double timeCpu = 0.00;
+//     for(int i=0; i<iteration; i++){
+//         time_t start = time(NULL);
+
+//         ofAppNew.doPreprocessing();
+
+//         time_t end = time(NULL);
+//         // double duration = double(end-begin) / CLOCKS_PER_SEC;
+//         double duration = double(end-start);
+//         timeCpu = timeCpu + duration;
+//     }
+//     cout.precision(17);
+//     cout << fixed << "\n Preprocessing in CPU: " << timeCpu/iteration;
+
+
+
+//     timeCpu = 0.00;
+//     for(int i=0; i<iteration; i++){
+//         time_t start = time(NULL);
+
+//         ofAppNew.mergeSequantially(9999.0);
+
+//         time_t end = time(NULL);
+//         // double duration = double(end-begin) / CLOCKS_PER_SEC;
+//         double duration = double(end-start);
+//         timeCpu = timeCpu + duration;
+//     }
+//     cout.precision(17);
+//     cout << fixed << "\n Merge Sequential time in CPU: " << timeCpu/iteration;
 
 
 
