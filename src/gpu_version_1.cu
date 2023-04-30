@@ -702,12 +702,6 @@ void test_preprocessing() {
     double timeCpu = 0.00;
     vector<segment> updated_segments;
     for(int i=0; i<iteration; i++){
-        // time_t start = time(NULL);
-        // updated_segments = gpu->preprocess(listSegments, pointQ);
-        // time_t end = time(NULL);
-        // double duration = double(end-start);
-        // timeCpu = timeCpu + duration;
-
         auto begin = chrono::high_resolution_clock::now();    
         updated_segments = gpu->preprocess(listSegments, pointQ);
         auto end = chrono::high_resolution_clock::now();    
@@ -719,8 +713,7 @@ void test_preprocessing() {
     }
     cout.precision(17);
     cout << fixed << "\n Preprocessing in GPU: " << timeCpu<<endl;
-    
-    
+
     vector<vray> initial_vrays;
     for(int i =0; i<updated_segments.size(); i++){
         segment s = updated_segments.at(i);
@@ -739,42 +732,6 @@ void test_preprocessing() {
     }
     cout.precision(17);
     cout << fixed << "\n Merge Sequential time in GPU: " << timeCpu<<endl;
-    
-
-    
-    // vector<int> all_time;
-    
-    // double timeDuration = 0.0;
-    // for(int i=0;i<iteration;i++) {
-    // //     vector<segment> listSegments = {
-    // //         segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
-    // //         segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
-    // //         segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-    // //         segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-    // //         segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
-
-    // // //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
-    // //         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
-    // //     };
-        
-        
-
-        
-    //     // auto start = chrono::high_resolution_clock::now();
-    //     // std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-    //     clock_t begin = clock();
-
-    //     vector<segment> segments = gpu->preprocess(listSegments, pointQ);
-    //     // auto stop = chrono::high_resolution_clock::now();
-    //     // std::chrono::steady_clock::time_point stop = std::chrono::steady_clock::now();
-    //     clock_t end = clock();
-    //     double duration = double(end-begin) / CLOCKS_PER_SEC;
-    //     // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
-    //     // all_time.push_back(duration);
-    //     timeDuration = timeDuration + duration;
-    // }
-    //return timeDuration/iteration;//(float)std::reduce(all_time.begin(), all_time.end())/(float) all_time.size();
-    // cout << "\n Prreprocessing in GPU: " << timeDuration/iteration;
 }
 
 int main() {
