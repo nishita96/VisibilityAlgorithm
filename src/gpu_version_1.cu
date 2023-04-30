@@ -694,7 +694,9 @@ vector<segment> generateSegments(int n){
 void test_preprocessing() {
 
     int iteration = 500;
-    vector<segment> listSegments = generateSegments(300);
+    int segment_count = 450;
+    vector<segment> listSegments = generateSegments(segment_count);
+    cout<<"TESTING "<<segment_count<< " in "<<iteration<<" iterations"<<endl;
     ofVec2f pointQ(500,400);
 
     GPU_V1 *gpu = new GPU_V1();
