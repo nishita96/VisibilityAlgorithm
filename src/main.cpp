@@ -292,7 +292,7 @@ vector<segment> generateSegments(int n){
 
 void test_performance() {
 
-    vector<segment> listSegments = generateSegments(100);
+    vector<segment> listSegments = generateSegments(500);
     ofApp ofAppNew;
     ofVec2f pointQ(500,400);
     ofAppNew.q = pointQ;
