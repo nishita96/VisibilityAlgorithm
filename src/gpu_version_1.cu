@@ -742,7 +742,6 @@ void test_preprocessing() {
     
 
     
-    cout<<ms<<endl;
     // vector<int> all_time;
     
     // double timeDuration = 0.0;
