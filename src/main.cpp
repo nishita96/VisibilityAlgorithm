@@ -273,73 +273,40 @@ void test_performance() {
 
 int main( ){
 
-    test_performance();
-    // test_preprocessing();
+//    test_performance();
 
 
     // do all processing
     
-//     ofApp ofAppNew;
+     ofApp ofAppNew;
     
     
     
-//     // ISSUE the lines have to be non intersecting - how to generate them dynamically?
+     // ISSUE the lines have to be non intersecting - how to generate them dynamically?
     
-//     // ---- define the point Q
-//     ofVec2f pointQ(500,400); //= ofGetWindowSize() / 2;
-//     ofAppNew.q = pointQ;
+     // ---- define the point Q
+     ofVec2f pointQ(500,400); //= ofGetWindowSize() / 2;
+     ofAppNew.q = pointQ;
 
-//     int numSegments = 1000;
-//     vector<segment> listSegmentsGenerated = generateSegments(numSegments);
+     int numSegments = 100;
+     vector<segment> listSegmentsGenerated = generateSegments(numSegments);
     
-//     // ---- made a set of segments covering cases
-//     vector<segment> listSegments = listSegmentsGenerated; //= {
-//         // segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
-//         // segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
-//         // segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-//         // segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-//         // segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+     // ---- made a set of segments covering cases
+     vector<segment> listSegments = listSegmentsGenerated; //= {
+         // segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+         // segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+         // segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+         // segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+         // segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
 
-// // //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
-// //         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
-// //     };
+ // //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+ //         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+ //     };
     
-//     // ---- add segments to draw
-//     ofAppNew.setOfSegmentsOriginal = listSegments;
-//     ofAppNew.setOfSegmentsToDraw = listSegments;
-//     ofAppNew.setOfSegments = listSegments;
-
-//     int iteration = 500;
-//     double timeCpu = 0.00;
-//     for(int i=0; i<iteration; i++){
-//         time_t start = time(NULL);
-
-//         ofAppNew.doPreprocessing();
-
-//         time_t end = time(NULL);
-//         // double duration = double(end-begin) / CLOCKS_PER_SEC;
-//         double duration = double(end-start);
-//         timeCpu = timeCpu + duration;
-//     }
-//     cout.precision(17);
-//     cout << fixed << "\n Preprocessing in CPU: " << timeCpu/iteration;
-
-
-
-//     timeCpu = 0.00;
-//     for(int i=0; i<iteration; i++){
-//         time_t start = time(NULL);
-
-//         ofAppNew.mergeSequantially(9999.0);
-
-//         time_t end = time(NULL);
-//         // double duration = double(end-begin) / CLOCKS_PER_SEC;
-//         double duration = double(end-start);
-//         timeCpu = timeCpu + duration;
-//     }
-//     cout.precision(17);
-//     cout << fixed << "\n Merge Sequential time in CPU: " << timeCpu/iteration;
-
+     // ---- add segments to draw
+     ofAppNew.setOfSegmentsOriginal = listSegments;
+     ofAppNew.setOfSegmentsToDraw = listSegments;
+     ofAppNew.setOfSegments = listSegments;
 
 
     // TODO ignore the point 0.0f,0.0f , might make some cases bad
@@ -348,7 +315,7 @@ int main( ){
     cout << "\n End of processing.";
     
     
-//    // POINTS TO DRAW THE POLYGON
+    // POINTS TO DRAW THE POLYGON
 //    // ---- points to draw polygon
 //    vector<ofVec2f> pointsPolygon;
 //    pointsPolygon = calculatePointsForTriangles(vrayForMerge, pointQ);
@@ -362,7 +329,7 @@ int main( ){
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:
-	// ofRunApp( &ofAppNew);
+    ofRunApp( &ofAppNew);
 
 }
 
