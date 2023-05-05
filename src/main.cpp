@@ -103,7 +103,7 @@ vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2){
         if(0 < it && it < lt.size() && lt.at(it).r < infinity ){
             segment s = segment(lt.at(it-1).unitVec * lt.at(it-1).l, lt.at(it).unitVec * lt.at(it).r);
             float thetaRad = l.at(i).theta * PI / 180.0;
-            segment other(ofVec2f(0.0f, 0.0f), ofVec2f(1500.0f * cos(thetaRad), 1500.0f * sin(thetaRad))); // x axis as segment
+            segment other(ofVec2f(0.0f, 0.0f), ofVec2f(99999.9 * cos(thetaRad), 1500.0f * sin(thetaRad))); // x axis as segment
             ofVec2f p = s.intersectionWithGivenSegment(other);
 //            if(p != ofVec2f(0.0f, 0.0f)){
 //                cout << "\n point" << p.x << " " << p.y ;
@@ -192,82 +192,6 @@ vector<ofVec2f> calculatePointsForTriangles(vector<vray> vrayForMerge, ofVec2f p
 }
 
 
-// void test_preprocessing() {
-
-//     vector<int> all_time;
-//     int iteration = 500;
-//     double timeDuration = 0.0;
-//     for(int i=0;i<iteration;i++) {
-//         vector<segment> listSegments = {
-//             segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
-//             segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
-//             segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-//             segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-//             segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
-
-//     //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
-//             segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
-//         };
-//         ofVec2f pointQ(500,400);
-//         clock_t begin = clock();
-        
-
-//     // PREPROCESS
-//    // ---- translate all segments to q (q becomes origin)
-//    for(int i=0; i< setOfSegments.size(); i++){
-//        setOfSegments.at(i).translateToQ(q);
-//    }
-// //    cout << "\n size after transalation to Q " << listSegments.size() ;
-
-//    // ---- removing points collinear (checking - if area of triangle Q p0 p1 = 0 then they are collinear)
-//    for (vector<segment>::iterator it = setOfSegments.begin(); it != setOfSegments.end();){
-//        if(it->collinearWithQ() == 0.0f){
-//            setOfSegments.erase(it); // automatically iterates to next item after erasing
-//        }
-//        else{
-//            ++it;
-//        }
-//    }
-// //    cout << "\n size after removing collinear segments " << listSegments.size() ;
-
-//    // ---- divde segment into 2 is cuts xaxis properly (slope != 0)
-// //    vector<segment>::iterator it = listSegments.begin(); // TODO has some issue, removes the wrong segment
-// //    vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
-//    listSegmentsCopy.clear();
-//    bool splitsAtX = false;
-//    for (auto seg: setOfSegments){
-//        if(seg.possibleIntersectionTestXAxis()){
-//            ofVec2f splitPoint = seg.splitSegmentInto2();
-//            if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
-//                // TODO check if you need to check which has smaller angle
-//                splitsAtX = true;
-//                listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
-//                listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
-//            }
-//            else{
-//                listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-//            }
-//        }
-//        else{
-//            listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-//        }
-//    }
-// //    cout << "\n size after spliting xaxis segments(copy) " << listSegmentsCopy.size() << "\n" ;
-
-
-
-
-
-
-
-//         clock_t end = clock();
-//         double duration = double(end-begin) / CLOCKS_PER_SEC;
-//         // auto duration = std::chrono::duration_cast<std::chr
-//         timeDuration = timeDuration + duration;
-//     }
-//     //return timeDuration/iteration;//(float)std::reduce(all_time.begin(), all_time.end())/(float) all_time.size();
-//     cout << "\n Preprocessing in CPU: " << timeDuration/iteration;
-// }
 
 vector<segment> generateSegments(int n){
     vector<segment> ret;
@@ -283,7 +207,7 @@ vector<segment> generateSegments(int n){
         theta = theta + 0.1;
         float x1 = r * cos(theta)+ 500;
         float y1 = r * sin(theta)+ 400;
-        cout << x0 << y0 << y0 << y1<< endl;
+//        cout << x0 << y0 << y0 << y1<< endl;
         ret.push_back(segment(ofVec2f(x0, y0), ofVec2f(x1, y1)));
     }
     return ret;
@@ -341,96 +265,10 @@ int main( ){
     cout << fixed << "\n Preprocessing in CPU: " << timeCpu/iteration;
 
 
-
-    
-    
-//    // PREPROCESS
-//    // ---- translate all segments to q (q becomes origin)
-//    for(int i=0; i< listSegments.size(); i++){
-//        listSegments.at(i).translateToQ(pointQ);
-//    }
-////    cout << "\n size after transalation to Q " << listSegments.size() ;
-//
-//    // ---- removing points collinear (checking - if area of triangle Q p0 p1 = 0 then they are collinear)
-//    for (vector<segment>::iterator it = listSegments.begin(); it != listSegments.end();){
-//        if(it->collinearWithQ() == 0.0f){
-//            listSegments.erase(it); // automatically iterates to next item after erasing
-//        }
-//        else{
-//            ++it;
-//        }
-//    }
-////    cout << "\n size after removing collinear segments " << listSegments.size() ;
-//
-//    // ---- divde segment into 2 is cuts xaxis properly (slope != 0)
-////    vector<segment>::iterator it = listSegments.begin(); // TODO has some issue, removes the wrong segment
-//    vector<segment> listSegmentsCopy; // TODO find way to not have to make this copy
-//    bool splitsAtX = false;
-//    for (auto seg: listSegments){
-//        if(seg.possibleIntersectionTestXAxis()){
-//            ofVec2f splitPoint = seg.splitSegmentInto2();
-//            if(splitPoint.x != -1.0f){ // there is intersection, HENCE split it in 2 segments
-//                // TODO check if you need to check which has smaller angle
-//                splitsAtX = true;
-//                listSegmentsCopy.push_back(segment(seg.p0, splitPoint));
-//                listSegmentsCopy.push_back(segment(seg.p1, splitPoint));
-//            }
-//            else{
-//                listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-//            }
-//        }
-//        else{
-//            listSegmentsCopy.push_back(segment(seg.p0, seg.p1));
-//        }
-//    }
-////    cout << "\n size after spliting xaxis segments(copy) " << listSegmentsCopy.size() << "\n" ;
-//
-//
-//
-    
-//    // MAKE THE V RAYS // TODO like the pseudocode
-//    vector<vray> vrays;
-//    ofVec2f xAxisVec(1,0);
-//    for (auto seg : listSegmentsCopy){
-//        vrays.push_back(seg.generateVray(seg).at(0));
-//        vrays.push_back(seg.generateVray(seg).at(1));
-//    }
-////    cout << "\n all vrays: ";
-////    printAllVrays(vrays);
-//    
-//    // to handle the edge case where more than 1 line cuts at xaxis
-//    int minValueR = 9999.0f;
-//    if(splitsAtX){
-//        for(auto vray : vrays){
-//            if(vray.theta == 360.0f && vray.r < minValueR){
-//                minValueR = vray.r;
-//            }
-//        }
-//    }
-    
-//    // MERGE, TODO currently sequential
-//    vector<vray> vrayForMerge;
-//    vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(0));
-//    vrayForMerge.push_back(listSegmentsCopy.at(0).generateVray(listSegmentsCopy.at(0)).at(1));
-//    vector<vray> vrayNewPair;
-//    for (int i=1; i<listSegmentsCopy.size(); i++){
-//        segment seg = listSegmentsCopy.at(i);
-//        vrayNewPair.clear();
-//        vrayNewPair.push_back(seg.generateVray(seg).at(0));
-//        vrayNewPair.push_back(seg.generateVray(seg).at(1));
-//        vrayForMerge = mergeVrays(vrayForMerge, vrayNewPair);
-//    }
-//
-//    vrayForMerge.push_back(vray(360.0, ofVec2f(1.0f, 0.0f), minValueR, infinity));
-//
-//    cout << "\n after merge vrays: ";
-//    printAllVrays(vrayForMerge);
-
-    
     // TODO ignore the point 0.0f,0.0f , might make some cases bad
     
 
-    cout << "\n end of processing.";
+    cout << "\n End of processing.";
     
     
 //    // POINTS TO DRAW THE POLYGON
@@ -444,7 +282,6 @@ int main( ){
     
 
 	ofSetupOpenGL(1024,768, OF_WINDOW);			// <-------- setup the GL context
-    cout << "\n sajdhfgiuashgfuywasgifuhasdgkjhsadfgkjhdsgkjsfdhg";
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:
@@ -463,18 +300,4 @@ int main( ){
 
 */
 
-
-/*
- SCRAP CODE WITH GOOD CPP OPTIONS/IDEAS
  
- //        segment& seg = listSegments.at(i); //by reference-not a memory address,wont have illegal values (null)
- //        seg.p0.set(seg.p0.x - pointQ.x, seg.p0.y - pointQ.y);
- //        seg.p1.set(seg.p1.x - pointQ.x, seg.p1.y - pointQ.y);
- 
- //        float angle = atan2(-findAngle.y, findAngle.x);
- //        float theta = angle * ( 180 / PI );
- //        theta = (theta < 0)? theta + 360.0f : theta;
- 
- 
- 
- */
