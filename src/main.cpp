@@ -2,7 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-
+#include <ctime>
 #include "ofApp.h"
 #include "segment.hpp"
 #include "vray.hpp"
@@ -132,19 +132,19 @@ vector<vray> mergeVrays(vector<vray> l1, vector<vray> l2){
 }
 
 void printAllSegments(vector<segment> listSegments){
-    cout << "\n DISPLAYING ALL SEGMENTS";
-    for (auto seg: listSegments){
-        cout << "\n seg (" << seg.p0.x << ", " << seg.p0.y << "), (" << seg.p1.x << ", " << seg.p1.y << ") ";
-    }
-    cout << "\n";
+    // cout << "\n DISPLAYING ALL SEGMENTS";
+    // for (auto seg: listSegments){
+    //     cout << "\n seg (" << seg.p0.x << ", " << seg.p0.y << "), (" << seg.p1.x << ", " << seg.p1.y << ") ";
+    // }
+    // cout << "\n";
 }
 
 void printAllVrays(vector<vray> vrays){
-    cout << "\n DISPLAY VRAYS";
-    for (auto ray : vrays) {
-        cout << "\n theta:" << ray.theta << ", unitvec(" << ray.unitVec.x << "," << ray.unitVec.y << "), r:" << ray.r << ", l:" << ray.l ;
-    }
-    cout << "\n";
+    // cout << "\n DISPLAY VRAYS";
+    // for (auto ray : vrays) {
+    //     cout << "\n theta:" << ray.theta << ", unitvec(" << ray.unitVec.x << "," << ray.unitVec.y << "), r:" << ray.r << ", l:" << ray.l ;
+    // }
+    // cout << "\n";
 }
 
 bool myComparator(vray a, vray b){
@@ -213,56 +213,133 @@ vector<segment> generateSegments(int n){
     return ret;
 }
 
+
+void test_performance() {
+
+    int segment_count = 450;
+    int iteration = 500;
+
+    vector<segment> listSegments = generateSegments(segment_count);
+    cout<<"TESTING "<<segment_count<< " in "<<iteration<<" iterations"<<endl;
+
+    ofApp ofAppNew;
+    ofVec2f pointQ(500,400);
+    ofAppNew.q = pointQ;
+    ofAppNew.setOfSegmentsOriginal = listSegments;
+    ofAppNew.setOfSegmentsToDraw = listSegments;
+    ofAppNew.setOfSegments = listSegments;
+
+    
+    
+    
+
+    // GPU_V1 *gpu = new GPU_V1();
+    
+    double timeCpu = 0.00;
+    vector<segment> updated_segments;
+    for(int i=0; i<iteration; i++){
+        auto begin = chrono::high_resolution_clock::now();    
+        ofAppNew.doPreprocessing();
+        auto end = chrono::high_resolution_clock::now();    
+        auto dur = end - begin;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+        
+        timeCpu = timeCpu + ms;
+
+        
+    }
+    cout.precision(17);
+    cout << fixed << "\n Preprocessing in CPU: " << timeCpu<<endl;
+
+    // vector<vray> initial_vrays;
+    // for(int i =0; i<updated_segments.size(); i++){
+    //     segment s = updated_segments.at(i);
+    //     initial_vrays.push_back(s.generateVray(s).at(0));
+    //     initial_vrays.push_back(s.generateVray(s).at(1));
+    // }
+    
+    timeCpu = 0.00;
+    for(int i=0; i<iteration; i++){
+        auto begin = chrono::high_resolution_clock::now();    
+        ofAppNew.mergeSequantially(9999.0);
+        auto end = chrono::high_resolution_clock::now();    
+        auto dur = end - begin;
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+        timeCpu = timeCpu + ms;
+    }
+    cout.precision(17);
+    cout << fixed << "\n Merge Sequential time in CPU: " << timeCpu<<endl;
+}
+
 int main( ){
 
+    test_performance();
     // test_preprocessing();
 
 
     // do all processing
     
-    ofApp ofAppNew;
+//     ofApp ofAppNew;
     
     
     
-    // ISSUE the lines have to be non intersecting - how to generate them dynamically?
+//     // ISSUE the lines have to be non intersecting - how to generate them dynamically?
     
-    // ---- define the point Q
-    ofVec2f pointQ(500,400); //= ofGetWindowSize() / 2;
-    ofAppNew.q = pointQ;
+//     // ---- define the point Q
+//     ofVec2f pointQ(500,400); //= ofGetWindowSize() / 2;
+//     ofAppNew.q = pointQ;
 
-    int numSegments = 100;
-    vector<segment> listSegmentsGenerated = generateSegments(numSegments);
+//     int numSegments = 1000;
+//     vector<segment> listSegmentsGenerated = generateSegments(numSegments);
     
-    // ---- made a set of segments covering cases
-    vector<segment> listSegments = listSegmentsGenerated; //= {
-        // segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
-        // segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
-        // segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
-        // segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
-        // segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
+//     // ---- made a set of segments covering cases
+//     vector<segment> listSegments = listSegmentsGenerated; //= {
+//         // segment(ofVec2f(600.0f, 550.0f), ofVec2f(650.0f, 400.0f)),  // right small, line to split at 0 degree
+//         // segment(ofVec2f(100.0f, 500.0f), ofVec2f(350.0f, 300.0f)),  // connected pair above
+//         // segment(ofVec2f(550.0f, 700.0f), ofVec2f(100.0f, 500.0f)),  // connected pair bottom
+//         // segment(ofVec2f(600.0f, 600.0f), ofVec2f(800.0f, 150.0f)),  // right side long
+//         // segment(ofVec2f(200.0f, 300.0f), ofVec2f(700.0f, 100.0f)),  // top horizontal
 
-// //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
-//         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
-//     };
+// // //        segment(ofVec2f(800.0f, 500.0f), ofVec2f(800.0f, 500.01f)),   // the line for ending
+// //         segment(ofVec2f(450.0f, 450.0f), ofVec2f(400.0f, 400.0f))   // the collinear line
+// //     };
     
-    // ---- add segments to draw
-    ofAppNew.setOfSegmentsOriginal = listSegments;
-    ofAppNew.setOfSegmentsToDraw = listSegments;
-    ofAppNew.setOfSegments = listSegments;
+//     // ---- add segments to draw
+//     ofAppNew.setOfSegmentsOriginal = listSegments;
+//     ofAppNew.setOfSegmentsToDraw = listSegments;
+//     ofAppNew.setOfSegments = listSegments;
 
-    int iteration = 500;
-    double timeCpu = 0.00;
-    for(int i=0; i<iteration; i++){
-        clock_t begin = clock();
+//     int iteration = 500;
+//     double timeCpu = 0.00;
+//     for(int i=0; i<iteration; i++){
+//         time_t start = time(NULL);
 
-        ofAppNew.doPreprocessing();
+//         ofAppNew.doPreprocessing();
 
-        clock_t end = clock();
-        double duration = double(end-begin) / CLOCKS_PER_SEC;
-        timeCpu = timeCpu + duration;
-    }
-    cout.precision(17);
-    cout << fixed << "\n Preprocessing in CPU: " << timeCpu/iteration;
+//         time_t end = time(NULL);
+//         // double duration = double(end-begin) / CLOCKS_PER_SEC;
+//         double duration = double(end-start);
+//         timeCpu = timeCpu + duration;
+//     }
+//     cout.precision(17);
+//     cout << fixed << "\n Preprocessing in CPU: " << timeCpu/iteration;
+
+
+
+//     timeCpu = 0.00;
+//     for(int i=0; i<iteration; i++){
+//         time_t start = time(NULL);
+
+//         ofAppNew.mergeSequantially(9999.0);
+
+//         time_t end = time(NULL);
+//         // double duration = double(end-begin) / CLOCKS_PER_SEC;
+//         double duration = double(end-start);
+//         timeCpu = timeCpu + duration;
+//     }
+//     cout.precision(17);
+//     cout << fixed << "\n Merge Sequential time in CPU: " << timeCpu/iteration;
+
 
 
     // TODO ignore the point 0.0f,0.0f , might make some cases bad
@@ -285,7 +362,7 @@ int main( ){
 	// this kicks off the running of my app
 	// can be OF_WINDOW or OF_FULLSCREEN
 	// pass in width and height too:
-	ofRunApp( &ofAppNew);
+	// ofRunApp( &ofAppNew);
 
 }
 
