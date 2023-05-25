@@ -1,5 +1,6 @@
 # Visibility Algorithm
-Expected Ouput
+
+The objective is the calculate the visible region (blue area) from a point Q (red dot) on a 2d plane having a set of non intersecting line segments (green line segments). 
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigExpected.png" width="600" height="450">
 
@@ -54,6 +55,12 @@ parallely merging
 - CPP development environment 
 - Clone the repo
 - Build using make and Run
+
+### Future Scope 
+- The GPU result can also be incorporated to display the result using OpenFrameworks.
+- It can process intersecting line and split them into 2 line segments each to process using the same algorithm. 
+
+#### Reference paper
 
 <!-- ![Screenshot of emptyExample](emptyExample.png)
 
