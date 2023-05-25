@@ -6,8 +6,6 @@ The objective is the calculate the visible region (blue area) from a point Q (re
 
 ## Our Output Video 
 
-
-
 https://github.com/nishita96/VisibilityAlgorithm/assets/24264347/a9db5e29-fac3-4c8e-8475-f5d186ae7d48
 
 
@@ -19,15 +17,15 @@ individual line segment processing
 
 Pair of line segments 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairOfSegments.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairSegments.png" width="600" height="450">
 
 pairwise merging 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigResultOfMerge.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairResult.png" width="600" height="450">
 
 Resultant area of visibility 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigAreaOfVisibility.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigAreaResult.png" width="600" height="450">
 
 ## Our test data 
 
@@ -42,21 +40,26 @@ serially merging
 
 parallely merging 
 
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigDivideAndConquer.png" width="600" height="450">
 
-### Setup for CPU
+## Performance Comparison
+
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigResultGraph.png" width="600" height="450">
+
+## Setup for CPU
 
 - Install [https://openframeworks.cc/download/](#Openframeworks) 
 - CPP development environment 
 - Make project in it with the cloned repo
 
-### Setup for GPU
+## Setup for GPU
 
 - Install [https://docs.nvidia.com/cuda/](#CUDA)
 - CPP development environment 
 - Clone the repo
 - Build using make and Run
 
-### Future Scope 
+## Future Scope 
 - The GPU result can also be incorporated to display the result using OpenFrameworks.
 - It can process intersecting line and split them into 2 line segments each to process using the same algorithm. 
 
