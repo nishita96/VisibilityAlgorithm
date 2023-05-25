@@ -8,8 +8,10 @@ The objective is the calculate the visible region (blue area) from a point Q (re
 
 https://github.com/nishita96/VisibilityAlgorithm/assets/24264347/a9db5e29-fac3-4c8e-8475-f5d186ae7d48
 
+### Pre Processing
 
 
+### Merging 
 
 individual line segment processing 
 
@@ -38,11 +40,15 @@ Resultant area of visibility
 
 ## On CPU
 
-serially merging 
+- Sequential pre processing for each line segment.
+- Sequentially merging each line segment into the resultant list of Vrays giving the visibility area. 
+- Taking result to draw the output using Openframeworks library. 
 
 ## On GPU 
 
-parallely merging 
+- Parallely pre processing all line segments to get pairs of Vrays (did not perform well due to high overhead, hence removed).
+- Sequentially pre processing all line segments.
+- Parallely merging line segments from bottom up (reduction sum method) to get resultant Vrays.
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigDivideAndConquer.png" width="200" height="150">
 
