@@ -1,5 +1,6 @@
 # Visibility Algorithm
-expected ouput 
+Expected Ouput
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigExpected.png" width="700" height="250">
 
 our output video 
 
