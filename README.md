@@ -70,7 +70,7 @@ Sequential CPU implementation vs reduction sum GPU implementation
 - It can process intersecting line and split them into 2 line segments each to process using the same algorithm. 
 
 #### Reference paper
-
+[GPU Parallel Visibility Algorithm for a Set of Segments Using Merge Path](https://www.sciencedirect.com/science/article/pii/S1571066119300052?ref=pdf_download&fr=RR-2&rr=7c1e6026794ea044)
 <!-- ![Screenshot of emptyExample](emptyExample.png)
 
 ### Learning Objectives -->
