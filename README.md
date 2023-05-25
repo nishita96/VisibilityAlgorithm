@@ -23,7 +23,7 @@ Resultant area of visibility
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigAreaOfVisibility.png" width="600" height="450">
 
-Our test data 
+## Our test data 
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigTestData.png" width="600" height="450">
 
