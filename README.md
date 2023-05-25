@@ -27,7 +27,7 @@ https://github.com/nishita96/VisibilityAlgorithm/assets/24264347/a9db5e29-fac3-4
 #### Vrays
 - Rays originating at the point Q going to infinity passing through the end points of the line segments
 - Have 4 components 
--- djhdghj
+  - djhdghj
 
 - Process individual line segment processing to get Vrays
 
