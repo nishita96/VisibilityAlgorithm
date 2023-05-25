@@ -10,10 +10,26 @@ https://github.com/nishita96/VisibilityAlgorithm/assets/24264347/a9db5e29-fac3-4
 
 ### Pre Processing
 
+- Transalte the origin to the point Q 
+
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPre1.png" width="300" height="250">
+
+- Remove points collinear with the point Q as they will not affect the visibilty 
+
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPre2.png" width="300" height="250">
+
+- Split the line segments passing through the positive X axis at the X axis into 2. As we need the visibilty algorithm to scan from 0 to 360 degrees.
+
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPre3.png" width="300" height="250">
 
 ### Merging 
 
-individual line segment processing 
+#### Vrays
+- Rays originating at the point Q going to infinity passing through the end points of the line segments
+- Have 4 components 
+-- djhdghj
+
+- Process individual line segment processing to get Vrays
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigSingleSegment.png" width="300" height="250">
 
