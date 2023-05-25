@@ -6,7 +6,7 @@ Expected Ouput
 ## Our Output Video 
 
 
-![Our Output]https://github.com/nishita96/VisibilityAlgorithm/assets/24264347/2aa404b3-6d17-4ff7-b293-6fc41b010957
+![Our Output](https://github.com/nishita96/VisibilityAlgorithm/assets/24264347/2aa404b3-6d17-4ff7-b293-6fc41b010957)
 
 
 
