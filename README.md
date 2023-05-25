@@ -17,7 +17,7 @@ individual line segment processing
 
 Pair of line segments 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairSegments.png"width="300" height="250">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairSegments.png" width="300" height="250">
 
 
 pairwise merging 
