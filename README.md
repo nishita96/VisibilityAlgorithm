@@ -3,11 +3,30 @@ Expected Ouput
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigExpected.png" width="600" height="450">
 
-our output video 
+Our Output Video 
+
+
 
 individual line segment processing 
 
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigSingleSegment.png" width="600" height="450">
+
+Pair of line segments 
+
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairOfSegments.png" width="600" height="450">
+
 pairwise merging 
+
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigResultOfMerge.png" width="600" height="450">
+
+Resultant area of visibility 
+
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigAreaOfVisibility.png" width="600" height="450">
+
+Our test data 
+
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigTestData.png" width="600" height="450">
+
 
 ## On CPU
 
