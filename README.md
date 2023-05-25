@@ -54,7 +54,7 @@ Sequential CPU implementation vs reduction sum GPU implementation
 
 ## Setup for CPU
 
-- Install [https://openframeworks.cc/download/](#Openframeworks) 
+- Install [Openframeworks](https://openframeworks.cc/download/) 
 - CPP development environment 
 - Make project in it with the cloned repo
 
