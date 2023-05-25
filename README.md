@@ -48,8 +48,9 @@ parallely merging
 
 
 ## Performance Comparison
+Sequential CPU implementation vs reduction sum GPU implementation 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigResultGraph.png" width="300" height="250">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigResultGraph.png" width="400" height="250">
 
 ## Setup for CPU
 
@@ -59,7 +60,7 @@ parallely merging
 
 ## Setup for GPU
 
-- Install [https://docs.nvidia.com/cuda/](#CUDA)
+- Install [CUDA](https://docs.nvidia.com/cuda/)
 - CPP development environment 
 - Clone the repo
 - Build using make and Run
