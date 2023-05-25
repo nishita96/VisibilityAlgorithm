@@ -2,7 +2,7 @@
 
 The objective is the calculate the visible region (blue area) from a point Q (red dot) on a 2d plane having a set of non intersecting line segments (green line segments). 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigExpected.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigExpected.png" width="400" height="350">
 
 ## Our Output Video 
 
@@ -13,23 +13,27 @@ https://github.com/nishita96/VisibilityAlgorithm/assets/24264347/a9db5e29-fac3-4
 
 individual line segment processing 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigSingleSegment.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigSingleSegment.png" width="300" height="250">
 
 Pair of line segments 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairSegments.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairSegments.png"width="300" height="250">
+
 
 pairwise merging 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairResult.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairResult.png" width="300" height="250">
+
 
 Resultant area of visibility 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigAreaResult.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigAreaResult.png" width="300" height="250">
+
 
 ## Our test data 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigTestData.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigTestData.png" width="300" height="250">
+
 
 
 ## On CPU
@@ -40,11 +44,12 @@ serially merging
 
 parallely merging 
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigDivideAndConquer.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigDivideAndConquer.png" width="200" height="150">
+
 
 ## Performance Comparison
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigResultGraph.png" width="600" height="450">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigResultGraph.png" width="300" height="250">
 
 ## Setup for CPU
 
