@@ -1,7 +1,7 @@
 # Visibility Algorithm
 Expected Ouput
 
-<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigExpected.png" width="700" height="550">
+<img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigExpected.png" width="600" height="450">
 
 our output video 
 
