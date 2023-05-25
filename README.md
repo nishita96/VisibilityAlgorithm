@@ -22,33 +22,41 @@ https://github.com/nishita96/VisibilityAlgorithm/assets/24264347/a9db5e29-fac3-4
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPre3.png" width="300" height="250">
 
-### Merging 
+
 
 #### Vrays
 - Rays originating at the point Q going to infinity passing through the end points of the line segments
 - Have 4 components 
-  - djhdghj
+  - Unit vector for direction 
+  - Angle theta from +X axis
+  - Length of visibility on the right side
+  - Lenght of visibility on the left side
 
-- Process individual line segment processing to get Vrays
+
+### Merging 
+
+- Process individual line segment to get a pair of Vrays from both ends.
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigSingleSegment.png" width="300" height="250">
 
-Pair of line segments 
+- Pair of line segments, in practice 4 Vrays.
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairSegments.png" width="300" height="250">
 
 
-pairwise merging 
+- Result of merging pairwise.
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigPairResult.png" width="300" height="250">
 
 
-Resultant area of visibility 
+- Resultant area of visibility from a pair of line segment.
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigAreaResult.png" width="300" height="250">
 
 
 ## Our test data 
+
+We needed a dynamically generated set of line segments given a size n to test performance. Since We cannot have intersecting line segments, we made a function to generate this dashed spiral consisting of line segments to test correctness and performace of implementation. The function takes integer values and generates the spiral. 
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigTestData.png" width="300" height="250">
 
@@ -64,7 +72,7 @@ Resultant area of visibility
 
 - Parallely pre processing all line segments to get pairs of Vrays (did not perform well due to high overhead, hence removed).
 - Sequentially pre processing all line segments.
-- Parallely merging line segments from bottom up (reduction sum method) to get resultant Vrays.
+- Parallely merging line segments from bottom up (reduction sum method) to get resultant Vrays. The heirarchihcal result can be visualized as below.
 
 <img src="https://github.com/nishita96/VisibilityAlgorithm/blob/main/images/FigDivideAndConquer.png" width="200" height="150">
 
