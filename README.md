@@ -1,8 +1,33 @@
 # Visibility Algorithm
+expected ouput 
+
+our output video 
+
+individual line segment processing 
+
+pairwise merging 
 
 ## On CPU
 
+serially merging 
+
 ## On GPU 
+
+parallely merging 
+
+
+### Setup for CPU
+
+- Install [https://openframeworks.cc/download/](#Openframeworks) 
+- CPP development environment 
+- Make project in it with the cloned repo
+
+### Setup for GPU
+
+- Install [https://docs.nvidia.com/cuda/](#CUDA)
+- CPP development environment 
+- Clone the repo
+- Build using make and Run
 
 <!-- ![Screenshot of emptyExample](emptyExample.png)
 
